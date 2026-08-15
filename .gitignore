@@ -1,0 +1,14 @@
+# Pyodide, when vendored for offline use. Around 30 MB, and reproducible
+# with ./tools/vendor_pyodide.sh, so it does not belong in git.
+web/vendor/
+
+node_modules
+package-lock.json
+
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+
+# Scratch files from a local Playwright run
+test-results/

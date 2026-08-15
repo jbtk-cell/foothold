@@ -1,0 +1,30 @@
+name: A lesson was confusing or wrong
+description: The most useful kind of report. If a lesson lost you, that is a bug in the lesson.
+labels: [lesson]
+body:
+  - type: input
+    id: lesson
+    attributes:
+      label: Which lesson
+      placeholder: "06 Lists / Building Lists in One Line"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What happened
+      options:
+        - The explanation lost me
+        - My correct answer was marked wrong
+        - The error message did not help
+        - Something in the lesson is factually wrong
+        - A typo
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: Details
+      description: If the explanation lost you, quote the sentence where it happened. If your answer was rejected, paste it.
+    validations:
+      required: true

@@ -1,0 +1,73 @@
+name: CI
+
+# Every lesson is proven correct on every push. The grading harness that runs
+# here is the same file the browser fetches, so a green run means a learner
+# can actually finish every exercise in the course.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Lessons and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # Pyodide 314 ships CPython 3.14, so CI grades on the same minor
+          # version the browser does. Anything else and the two could disagree.
+          python-version: '3.14'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate the curriculum
+        run: python3 tools/validate.py
+
+  browser:
+    name: End to end in Chromium
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright
+        run: npm install --no-save playwright@1.62.1 && npx playwright install --with-deps chromium
+
+      - name: Serve the site
+        run: |
+          nohup python3 -m http.server 8777 --directory web > /tmp/serve.log 2>&1 &
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:8777/index.html > /dev/null && break
+            sleep 1
+          done
+
+      - name: Run the smoke test
+        run: node tools/smoke_test.mjs http://localhost:8777
+
+      - name: Grade every lesson in the browser runtime
+        run: node tools/check_in_browser.mjs http://localhost:8777
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: docs/screenshots/
+          if-no-files-found: ignore

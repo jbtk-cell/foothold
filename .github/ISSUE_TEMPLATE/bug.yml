@@ -1,0 +1,28 @@
+name: Something is broken
+description: The site, the editor, the terminal, or the grading misbehaved.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: "Firefox 141 on Ubuntu"
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Anything in the browser console
+      description: Optional. Open developer tools, reload, and paste any red text.

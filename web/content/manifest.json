@@ -1,0 +1,549 @@
+{
+  "version": 1,
+  "generated_by": "tools/build_manifest.py",
+  "modules": [
+    {
+      "slug": "first-steps",
+      "title": "First Steps",
+      "summary": "Run your first program, read your first error, and stop being afraid of the terminal.",
+      "lessons": [
+        {
+          "slug": "hello-world",
+          "title": "Your First Program",
+          "goal": "Make a computer print words on a screen.",
+          "estimate": 5,
+          "concepts": [
+            "print",
+            "strings"
+          ],
+          "path": "curriculum/01-first-steps/01-hello-world.md"
+        },
+        {
+          "slug": "reading-errors",
+          "title": "Reading an Error",
+          "goal": "Treat an error message as directions rather than as failure.",
+          "estimate": 7,
+          "concepts": [
+            "errors",
+            "tracebacks"
+          ],
+          "path": "curriculum/01-first-steps/02-reading-errors.md"
+        },
+        {
+          "slug": "more-printing",
+          "title": "Printing More Than One Thing",
+          "goal": "Build up output from several pieces and control where the lines break.",
+          "estimate": 6,
+          "concepts": [
+            "print",
+            "arguments"
+          ],
+          "path": "curriculum/01-first-steps/03-more-printing.md"
+        },
+        {
+          "slug": "comments",
+          "title": "Notes to Yourself",
+          "goal": "Leave notes in code that Python ignores and people read.",
+          "estimate": 5,
+          "concepts": [
+            "comments"
+          ],
+          "path": "curriculum/01-first-steps/04-comments.md"
+        }
+      ]
+    },
+    {
+      "slug": "values-and-names",
+      "title": "Values and Names",
+      "summary": "Store things, do arithmetic on them, and build sentences out of them.",
+      "lessons": [
+        {
+          "slug": "variables",
+          "title": "Giving Things Names",
+          "goal": "Store a value under a name and use it later.",
+          "estimate": 6,
+          "concepts": [
+            "variables",
+            "assignment"
+          ],
+          "path": "curriculum/02-values-and-names/01-variables.md"
+        },
+        {
+          "slug": "numbers",
+          "title": "Arithmetic",
+          "goal": "Do sums, and know which kind of number you get back.",
+          "estimate": 7,
+          "concepts": [
+            "numbers",
+            "operators"
+          ],
+          "path": "curriculum/02-values-and-names/02-numbers.md"
+        },
+        {
+          "slug": "strings",
+          "title": "Working with Text",
+          "goal": "Join text together, measure it, and change its case.",
+          "estimate": 7,
+          "concepts": [
+            "strings",
+            "methods"
+          ],
+          "path": "curriculum/02-values-and-names/03-strings.md"
+        },
+        {
+          "slug": "f-strings",
+          "title": "Sentences with Values In",
+          "goal": "Drop values straight into text with an f-string.",
+          "estimate": 6,
+          "concepts": [
+            "f-strings",
+            "formatting"
+          ],
+          "path": "curriculum/02-values-and-names/04-f-strings.md"
+        },
+        {
+          "slug": "input",
+          "title": "Asking a Question",
+          "goal": "Read something the person running your program typed, and turn it into a number.",
+          "estimate": 8,
+          "concepts": [
+            "input",
+            "type conversion"
+          ],
+          "path": "curriculum/02-values-and-names/05-input.md"
+        }
+      ]
+    },
+    {
+      "slug": "making-decisions",
+      "title": "Making Decisions",
+      "summary": "Let a program take one path or another depending on what is true.",
+      "lessons": [
+        {
+          "slug": "true-and-false",
+          "title": "True and False",
+          "goal": "Write a comparison and read the answer.",
+          "estimate": 6,
+          "concepts": [
+            "booleans",
+            "comparison"
+          ],
+          "path": "curriculum/03-making-decisions/01-true-and-false.md"
+        },
+        {
+          "slug": "if",
+          "title": "If",
+          "goal": "Run some lines only when a condition holds.",
+          "estimate": 7,
+          "concepts": [
+            "if",
+            "indentation"
+          ],
+          "path": "curriculum/03-making-decisions/02-if.md"
+        },
+        {
+          "slug": "else",
+          "title": "Else and Elif",
+          "goal": "Choose between two paths, or among many.",
+          "estimate": 8,
+          "concepts": [
+            "else",
+            "elif"
+          ],
+          "path": "curriculum/03-making-decisions/03-else.md"
+        },
+        {
+          "slug": "and-or-not",
+          "title": "And, Or, Not",
+          "goal": "Combine several conditions into one.",
+          "estimate": 7,
+          "concepts": [
+            "logic",
+            "operators"
+          ],
+          "path": "curriculum/03-making-decisions/04-and-or-not.md"
+        },
+        {
+          "slug": "decisions-practice",
+          "title": "Putting Decisions Together",
+          "goal": "Write a small program that reads input and branches on it.",
+          "estimate": 9,
+          "concepts": [
+            "if",
+            "input",
+            "practice"
+          ],
+          "path": "curriculum/03-making-decisions/05-decisions-practice.md"
+        }
+      ]
+    },
+    {
+      "slug": "repeating-yourself",
+      "title": "Repeating Yourself",
+      "summary": "Loops - the thing computers are genuinely better at than people.",
+      "lessons": [
+        {
+          "slug": "for-loops",
+          "title": "Doing Something Ten Times",
+          "goal": "Repeat a block of code a fixed number of times.",
+          "estimate": 7,
+          "concepts": [
+            "for",
+            "range"
+          ],
+          "path": "curriculum/04-repeating-yourself/01-for-loops.md"
+        },
+        {
+          "slug": "accumulating",
+          "title": "Building Up an Answer",
+          "goal": "Carry a running total through a loop.",
+          "estimate": 8,
+          "concepts": [
+            "accumulator",
+            "for"
+          ],
+          "path": "curriculum/04-repeating-yourself/02-accumulating.md"
+        },
+        {
+          "slug": "while",
+          "title": "Looping Until Something Changes",
+          "goal": "Use a while loop when you do not know how many times to go round.",
+          "estimate": 8,
+          "concepts": [
+            "while",
+            "conditions"
+          ],
+          "path": "curriculum/04-repeating-yourself/03-while.md"
+        },
+        {
+          "slug": "break-continue",
+          "title": "Leaving Early",
+          "goal": "Stop a loop, or skip one turn of it.",
+          "estimate": 7,
+          "concepts": [
+            "break",
+            "continue"
+          ],
+          "path": "curriculum/04-repeating-yourself/04-break-continue.md"
+        },
+        {
+          "slug": "nested-loops",
+          "title": "Loops Inside Loops",
+          "goal": "Use one loop inside another to work through a grid.",
+          "estimate": 8,
+          "concepts": [
+            "nested loops"
+          ],
+          "path": "curriculum/04-repeating-yourself/05-nested-loops.md"
+        }
+      ]
+    },
+    {
+      "slug": "functions",
+      "title": "Functions",
+      "summary": "Name a piece of work once, then use it as often as you like.",
+      "lessons": [
+        {
+          "slug": "defining",
+          "title": "Making Your Own",
+          "goal": "Define a function and call it.",
+          "estimate": 7,
+          "concepts": [
+            "def",
+            "functions"
+          ],
+          "path": "curriculum/05-functions/01-defining.md"
+        },
+        {
+          "slug": "parameters",
+          "title": "Passing Things In",
+          "goal": "Write a function that behaves differently depending on what it is given.",
+          "estimate": 8,
+          "concepts": [
+            "parameters",
+            "arguments"
+          ],
+          "path": "curriculum/05-functions/02-parameters.md"
+        },
+        {
+          "slug": "return",
+          "title": "Handing an Answer Back",
+          "goal": "Return a value from a function instead of printing it.",
+          "estimate": 9,
+          "concepts": [
+            "return"
+          ],
+          "path": "curriculum/05-functions/03-return.md"
+        },
+        {
+          "slug": "defaults",
+          "title": "Optional Arguments",
+          "goal": "Give a parameter a default, and pass arguments by name.",
+          "estimate": 7,
+          "concepts": [
+            "default arguments",
+            "keyword arguments"
+          ],
+          "path": "curriculum/05-functions/04-defaults.md"
+        },
+        {
+          "slug": "scope",
+          "title": "What a Function Can See",
+          "goal": "Understand which variables exist where, and document what a function does.",
+          "estimate": 8,
+          "concepts": [
+            "scope",
+            "docstrings"
+          ],
+          "path": "curriculum/05-functions/05-scope.md"
+        }
+      ]
+    },
+    {
+      "slug": "lists",
+      "title": "Lists",
+      "summary": "Hold many values under one name, and do something to each of them.",
+      "lessons": [
+        {
+          "slug": "making-lists",
+          "title": "Many Things, One Name",
+          "goal": "Create a list and read items out of it by position.",
+          "estimate": 7,
+          "concepts": [
+            "lists",
+            "indexing"
+          ],
+          "path": "curriculum/06-lists/01-making-lists.md"
+        },
+        {
+          "slug": "looping-lists",
+          "title": "Looping Over a List",
+          "goal": "Do something to every item in a list.",
+          "estimate": 7,
+          "concepts": [
+            "for",
+            "lists"
+          ],
+          "path": "curriculum/06-lists/02-looping-lists.md"
+        },
+        {
+          "slug": "list-methods",
+          "title": "Changing a List",
+          "goal": "Add, remove, sort and search a list.",
+          "estimate": 8,
+          "concepts": [
+            "list methods"
+          ],
+          "path": "curriculum/06-lists/03-list-methods.md"
+        },
+        {
+          "slug": "comprehensions",
+          "title": "Building Lists in One Line",
+          "goal": "Write a list comprehension, and know when not to.",
+          "estimate": 8,
+          "concepts": [
+            "comprehensions"
+          ],
+          "path": "curriculum/06-lists/04-comprehensions.md"
+        },
+        {
+          "slug": "lists-practice",
+          "title": "A Small Report",
+          "goal": "Combine loops, lists and functions into something useful.",
+          "estimate": 10,
+          "concepts": [
+            "practice",
+            "functions",
+            "lists"
+          ],
+          "path": "curriculum/06-lists/05-lists-practice.md"
+        }
+      ]
+    },
+    {
+      "slug": "dictionaries",
+      "title": "Dictionaries and Sets",
+      "summary": "Look things up by name instead of by position, and keep a collection unique.",
+      "lessons": [
+        {
+          "slug": "dictionaries",
+          "title": "Looking Things Up",
+          "goal": "Store pairs of keys and values, and get a value back by its key.",
+          "estimate": 8,
+          "concepts": [
+            "dictionaries"
+          ],
+          "path": "curriculum/07-dictionaries/01-dictionaries.md"
+        },
+        {
+          "slug": "looping-dictionaries",
+          "title": "Going Through a Dictionary",
+          "goal": "Loop over pairs, and count things with a dictionary.",
+          "estimate": 8,
+          "concepts": [
+            "dictionaries",
+            "loops"
+          ],
+          "path": "curriculum/07-dictionaries/02-looping-dictionaries.md"
+        },
+        {
+          "slug": "sets-and-tuples",
+          "title": "Sets and Tuples",
+          "goal": "Use a set to remove duplicates and a tuple to fix a group of values.",
+          "estimate": 8,
+          "concepts": [
+            "sets",
+            "tuples"
+          ],
+          "path": "curriculum/07-dictionaries/03-sets-and-tuples.md"
+        },
+        {
+          "slug": "nested-data",
+          "title": "Data Inside Data",
+          "goal": "Work with a list of dictionaries, which is how most real data arrives.",
+          "estimate": 9,
+          "concepts": [
+            "nested data",
+            "dictionaries"
+          ],
+          "path": "curriculum/07-dictionaries/04-nested-data.md"
+        }
+      ]
+    },
+    {
+      "slug": "text",
+      "title": "Text",
+      "summary": "Take text apart, put it back together, and clean up what people typed.",
+      "lessons": [
+        {
+          "slug": "splitting-joining",
+          "title": "Splitting and Joining",
+          "goal": "Turn text into a list and a list back into text.",
+          "estimate": 8,
+          "concepts": [
+            "split",
+            "join"
+          ],
+          "path": "curriculum/08-text/01-splitting-joining.md"
+        },
+        {
+          "slug": "inspecting-text",
+          "title": "Asking Questions About Text",
+          "goal": "Test what a string contains, and slice pieces out of it.",
+          "estimate": 8,
+          "concepts": [
+            "string methods",
+            "slicing"
+          ],
+          "path": "curriculum/08-text/02-inspecting-text.md"
+        },
+        {
+          "slug": "cleaning-text",
+          "title": "Cleaning Up Real Input",
+          "goal": "Normalise messy text so that comparisons work.",
+          "estimate": 9,
+          "concepts": [
+            "normalisation",
+            "practice"
+          ],
+          "path": "curriculum/08-text/03-cleaning-text.md"
+        }
+      ]
+    },
+    {
+      "slug": "when-things-go-wrong",
+      "title": "When Things Go Wrong",
+      "summary": "Handle the errors you can predict, and raise your own for the ones you cannot fix.",
+      "lessons": [
+        {
+          "slug": "try-except",
+          "title": "Catching an Error",
+          "goal": "Keep a program running when something predictable goes wrong.",
+          "estimate": 9,
+          "concepts": [
+            "exceptions",
+            "try"
+          ],
+          "path": "curriculum/09-when-things-go-wrong/01-try-except.md"
+        },
+        {
+          "slug": "raising",
+          "title": "Raising Your Own",
+          "goal": "Reject bad input at the door instead of letting it spread.",
+          "estimate": 8,
+          "concepts": [
+            "raise",
+            "validation"
+          ],
+          "path": "curriculum/09-when-things-go-wrong/02-raising.md"
+        },
+        {
+          "slug": "files",
+          "title": "Reading and Writing Files",
+          "goal": "Save something to disk and read it back.",
+          "estimate": 9,
+          "concepts": [
+            "files",
+            "with"
+          ],
+          "path": "curriculum/09-when-things-go-wrong/03-files.md"
+        }
+      ]
+    },
+    {
+      "slug": "build-something",
+      "title": "Build Something",
+      "summary": "Four projects that use everything, with far less hand-holding.",
+      "lessons": [
+        {
+          "slug": "fizzbuzz",
+          "title": "FizzBuzz",
+          "goal": "Write the exercise every programmer has been asked at an interview.",
+          "estimate": 8,
+          "concepts": [
+            "loops",
+            "conditions",
+            "project"
+          ],
+          "path": "curriculum/10-build-something/01-fizzbuzz.md"
+        },
+        {
+          "slug": "guessing-game",
+          "title": "A Guessing Game",
+          "goal": "Build a loop that keeps asking until the answer is right.",
+          "estimate": 10,
+          "concepts": [
+            "while",
+            "input",
+            "project"
+          ],
+          "path": "curriculum/10-build-something/02-guessing-game.md"
+        },
+        {
+          "slug": "grade-book",
+          "title": "A Grade Book",
+          "goal": "Turn a pile of records into a report, using functions to keep it readable.",
+          "estimate": 12,
+          "concepts": [
+            "dictionaries",
+            "functions",
+            "project"
+          ],
+          "path": "curriculum/10-build-something/03-grade-book.md"
+        },
+        {
+          "slug": "todo-list",
+          "title": "A To-Do List That Remembers",
+          "goal": "Build a complete program - data, functions, files and error handling together.",
+          "estimate": 14,
+          "concepts": [
+            "project",
+            "files",
+            "functions"
+          ],
+          "path": "curriculum/10-build-something/04-todo-list.md"
+        }
+      ]
+    }
+  ]
+}

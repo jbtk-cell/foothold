@@ -1,0 +1,19 @@
+{
+  "name": "Foothold - learn Python in your browser",
+  "short_name": "Foothold",
+  "description": "A free, open source course that teaches you to code, with a real Python interpreter running inside the page.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0F1620",
+  "theme_color": "#0F1620",
+  "categories": ["education", "developer"],
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

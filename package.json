@@ -1,0 +1,20 @@
+{
+  "name": "foothold",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A free, open source course that teaches you to code, with a real Python interpreter running in the browser.",
+  "license": "MIT",
+  "type": "module",
+  "comment": "Foothold has no build step and the site ships as plain static files. This file exists only so the optional browser test can install Playwright; nothing in web/ depends on npm.",
+  "scripts": {
+    "serve": "./serve.sh",
+    "validate": "python3 tools/validate.py",
+    "manifest": "python3 tools/build_manifest.py",
+    "test:web": "node tools/test_web.mjs",
+    "test:browser": "node tools/smoke_test.mjs",
+    "test:lessons": "node tools/check_in_browser.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
