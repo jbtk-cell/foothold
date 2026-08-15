@@ -50,9 +50,13 @@ for (const module of manifest.modules) {
     // eslint-disable-next-line no-await-in-loop
     const report = await page.evaluate(
       async ({ path, slug }) => {
-        const { parseLesson } = await import('/js/lesson.js');
-        const { runtime } = await import('/js/runtime.js');
-        const text = await (await fetch(`/content/${path}`)).text();
+        // Resolve against the page rather than the site root: GitHub Pages
+        // serves this from /foothold/, and the site itself uses only relative
+        // URLs so that it works from any subpath. This check has to do the same.
+        const at = (relative) => new URL(relative, document.baseURI).href;
+        const { parseLesson } = await import(at('js/lesson.js'));
+        const { runtime } = await import(at('js/runtime.js'));
+        const text = await (await fetch(at(`content/${path}`))).text();
         const lesson = parseLesson(text, slug);
         const result = await runtime.grade(lesson.solution, lesson.tests, lesson.stdin);
         return {
