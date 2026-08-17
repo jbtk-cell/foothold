@@ -20,7 +20,7 @@ newline, so the cursor sits on the same line - which is why prompts usually
 end with a space.
 
 > Press **Run** and Foothold will ask you the question for real, one at a time,
-> just as a terminal would.
+> the way a terminal would.
 
 ## Everything typed is text
 

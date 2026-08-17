@@ -25,10 +25,10 @@ you will stop noticing it quickly.
 **It stops before the number you gave.** `range(5)` produces five numbers, and
 5 is not one of them. Read it as "five values, starting at zero."
 
-The name `i` is not special - it is just a variable, set to a different value
-each time round. `for number in range(5)` works identically. `i` is
-traditional for a counter, and short names are acceptable when the variable
-only exists for two lines.
+The name `i` is not special. It is a variable, set to a different value each
+time round, and `for number in range(5)` works the same way. `i` is
+traditional for a counter, and short names are fine when the variable only
+exists for two lines.
 
 ## Choosing where to start and stop
 
@@ -56,7 +56,7 @@ for i in range(3, 0, -1):
 
 ## Ignoring the number
 
-Sometimes you just want something to happen n times and do not care which
+Sometimes you want something to happen n times and do not care which
 iteration you are on. By convention the variable is then named `_`:
 
 ```python

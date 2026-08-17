@@ -59,14 +59,13 @@ async function init() {
 
   // The harness is fetched rather than inlined so that the exact same file
   // grades in the browser and in CI. Two copies would drift.
-  const [harnessSource, consoleSource] = await Promise.all([
-    fetch(new URL('../py/harness.py', self.location.href)).then((r) => r.text()),
-    fetch(new URL('../py/console.py', self.location.href)).then((r) => r.text()),
-  ]);
+  const modules = ['harness', 'console', 'tracer'];
+  const sources = await Promise.all(
+    modules.map((name) => fetch(new URL(`../py/${name}.py`, self.location.href)).then((r) => r.text())),
+  );
 
   pyodide.FS.mkdirTree('/foothold');
-  pyodide.FS.writeFile('/foothold/harness.py', harnessSource);
-  pyodide.FS.writeFile('/foothold/console.py', consoleSource);
+  modules.forEach((name, index) => pyodide.FS.writeFile(`/foothold/${name}.py`, sources[index]));
 
   // Every result crosses the boundary as a JSON string. Handing back Python
   // objects would mean managing PyProxy lifetimes for something the main
@@ -75,7 +74,10 @@ async function init() {
   pyodide.runPython(`
 import sys, json
 sys.path.insert(0, "/foothold")
-import harness, console
+import harness, console, tracer
+
+def _trace(code, stdin):
+    return json.dumps(tracer.trace(code, stdin))
 
 def _run(code, stdin):
     result = harness.run_code(code, stdin)
@@ -98,6 +100,7 @@ def _complete(prefix):
 
   api = {
     run: pyodide.globals.get('_run'),
+    trace: pyodide.globals.get('_trace'),
     grade: pyodide.globals.get('_grade'),
     push: pyodide.globals.get('_push'),
     reset: pyodide.globals.get('_reset'),
@@ -116,6 +119,11 @@ const HANDLERS = {
   async run({ code, stdin }) {
     await init();
     return JSON.parse(api.run(code, stdin || ''));
+  },
+
+  async trace({ code, stdin }) {
+    await init();
+    return JSON.parse(api.trace(code, stdin || ''));
   },
 
   async grade({ code, tests, stdin }) {

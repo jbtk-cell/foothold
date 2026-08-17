@@ -39,8 +39,8 @@ score = 10
 print(score)
 ```
 
-The second assignment replaces the first. The old value is simply gone. This
-also means you can build a value up from itself:
+The second assignment replaces the first. The old value is gone, which also
+means you can build a value up from itself:
 
 ```python
 score = 0

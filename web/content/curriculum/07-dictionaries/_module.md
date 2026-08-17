@@ -4,7 +4,6 @@ summary: Look things up by name instead of by position, and keep a collection un
 ---
 
 A list answers "what is the third one?" A dictionary answers "what is the
-price of the notebook?" - which is much more often the question you actually
-have.
+price of the notebook?" - which is much more often the question you have.
 
 This module adds the three remaining collections you will use daily.

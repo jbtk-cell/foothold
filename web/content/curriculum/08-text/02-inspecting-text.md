@@ -18,7 +18,7 @@ Strings can be examined as well as transformed.
 | `.find(x)` | at what position is x? (-1 if absent) |
 | `.count(x)` | how many times does x appear? |
 
-And `in` works on strings just as it does on lists:
+And `in` works on strings as it does on lists:
 
 ```python
 if "@" in email:

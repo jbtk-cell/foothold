@@ -66,17 +66,38 @@ async function main() {
   );
   check('the interpreter reports ready', true);
 
-  // --- The live prompt in the hero -----------------------------------------
-  console.log('\nhero terminal');
-  const heroEntry = page.locator('.hero-demo .terminal-entry');
-  await heroEntry.fill('2 + 2');
-  await heroEntry.press('Enter');
-  // Assert on the last output line specifically. Matching "4" anywhere in the
-  // terminal would also match the "3.14" in the banner, and a test that can
-  // pass while the runtime is broken is worse than no test.
+  // --- The hero plays a real recording, not an animation --------------------
+  console.log('\nhero demonstration');
+  await page.waitForSelector('.hero-tape-tick', { timeout: 60_000 });
+  const tickCount = await page.locator('.hero-tape-tick').count();
+  check('the hero records the demo program', tickCount > 3, `only ${tickCount} steps`);
+
+  await page.waitForSelector('.hero-code li.is-on', { timeout: 30_000 });
+  check('a line is highlighted as it runs', true);
+  await page.waitForFunction(
+    () => (document.querySelector('.js-vars')?.textContent || '').includes('basket'),
+    null,
+    { timeout: 30_000 },
+  );
+  check('the variables update alongside it', true);
+
+  // Pausing has to actually stop it, for anyone who finds motion distracting.
+  await page.click('.hero-trace-toggle');
+  const frozen = await page.textContent('.js-vars');
+  await page.waitForTimeout(1600);
+  check('pause stops the loop', (await page.textContent('.js-vars')) === frozen);
+
+  // --- The scratch prompt on the front page ---------------------------------
+  console.log('\nscratch terminal');
+  const scratch = page.locator('.scratch-terminal .terminal-entry');
+  await scratch.fill('2 + 2');
+  await scratch.press('Enter');
+  // Assert on the last output line specifically. Matching "4" anywhere would
+  // also match the "3.14" in the banner, and a test that can pass while the
+  // runtime is broken is worse than no test.
   await page.waitForFunction(
     () => {
-      const lines = document.querySelectorAll('.hero-demo .terminal-output .terminal-out');
+      const lines = document.querySelectorAll('.scratch-terminal .terminal-output .terminal-out');
       return lines.length > 0 && lines[lines.length - 1].textContent.trim() === '4';
     },
     null,
@@ -84,17 +105,18 @@ async function main() {
   );
   check('typing 2 + 2 prints 4', true);
 
-  await heroEntry.fill('name = "Ada"');
-  await heroEntry.press('Enter');
-  await heroEntry.fill('f"hello {name}"');
-  await heroEntry.press('Enter');
+  await scratch.fill('name = "Ada"');
+  await scratch.press('Enter');
+  await scratch.fill('f"hello {name}"');
+  await scratch.press('Enter');
   await page.waitForFunction(
-    () => document.querySelector('.hero-demo .terminal-output')?.textContent.includes('hello Ada'),
+    () => document.querySelector('.scratch-terminal .terminal-output')?.textContent.includes('hello Ada'),
     null,
     { timeout: 30_000 },
   );
   check('the namespace persists between lines', true);
 
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: resolve(SHOTS, 'home.png'), fullPage: false });
 
   // --- A lesson, start to finish -------------------------------------------
@@ -135,6 +157,51 @@ async function main() {
     { timeout: 30_000 },
   );
   check('Run shows the program output', true);
+
+  // --- The trace: the feature the course is built around ---------------------
+  console.log('\ntrace');
+  await page.fill('.editor-input', 'total = 0\nfor i in range(3):\n    total += i\nprint(total)');
+  await page.click('.pane-tab[data-pane="trace"]');
+  await page.click('.js-trace-start');
+  await page.waitForSelector('.trace-slider', { timeout: 60_000 });
+
+  const stepCount = await page.evaluate(() => Number(document.querySelector('.trace-slider').max) + 1);
+  check('the program is recorded step by step', stepCount > 5, `only ${stepCount} steps`);
+  check('the executing line is marked in the editor', await page.isVisible('.editor-marker'));
+
+  // Scrub to the middle and confirm the three views move together.
+  await page.fill('.trace-slider', '6');
+  await page.dispatchEvent('.trace-slider', 'input');
+  await page.waitForTimeout(200);
+
+  const varsText = (await page.textContent('.js-vars')).replace(/\s+/g, ' ');
+  check('the variables panel shows the accumulator', /total/.test(varsText), varsText);
+  check('a changed value shows what it was', /was/.test(varsText), varsText);
+
+  const markerTop = await page.evaluate(() => document.querySelector('.editor-marker').style.top);
+  await page.click('.js-first');
+  await page.waitForTimeout(200);
+  const markerTopAtStart = await page.evaluate(() => document.querySelector('.editor-marker').style.top);
+  check('stepping back moves the marker', markerTop !== markerTopAtStart, `${markerTop} vs ${markerTopAtStart}`);
+
+  await page.click('.js-last');
+  await page.waitForTimeout(200);
+  check(
+    'the output pane fills in as the program runs',
+    (await page.textContent('.js-output')).trim() === '3',
+    await page.textContent('.js-output'),
+  );
+
+  await page.screenshot({ path: resolve(SHOTS, 'trace.png'), fullPage: false });
+
+  // A failed check offers a way into the recording.
+  await page.fill('.editor-input', 'print("wrong")');
+  await page.click('.js-check');
+  await page.waitForSelector('.js-why', { timeout: 60_000 });
+  check('a failed check offers to show why', true);
+  await page.click('.js-why');
+  await page.waitForSelector('.trace-slider', { timeout: 60_000 });
+  check('it opens the recording', true);
 
   // --- Errors point at the learner's line -----------------------------------
   console.log('\nerrors');

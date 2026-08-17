@@ -33,6 +33,9 @@ jobs:
       - name: Validate the curriculum
         run: python3 tools/validate.py
 
+      - name: Check the tracer
+        run: python3 tools/test_tracer.py
+
   browser:
     name: End to end in Chromium
     runs-on: ubuntu-latest

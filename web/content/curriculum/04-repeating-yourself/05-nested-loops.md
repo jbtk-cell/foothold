@@ -6,7 +6,7 @@ concepts:
   - nested loops
 ---
 
-A loop is just a block of code, and a block of code can contain a loop.
+A loop is a block of code, and a block of code can contain a loop.
 
 ```python
 for row in range(3):

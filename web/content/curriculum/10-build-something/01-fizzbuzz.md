@@ -15,8 +15,8 @@ The rules, for the numbers 1 to 100:
 - a multiple of both prints `FizzBuzz`
 - anything else prints the number
 
-It is famous because it is genuinely easy and still catches people out. The
-trap is the order of the checks. If you test for 3 first, then 15 prints
+It is famous because it is easy and still catches people out. The trap is
+the order of the checks. If you test for 3 first, then 15 prints
 `Fizz` and stops - the `FizzBuzz` case never gets a look in.
 
 Two ways to avoid that:

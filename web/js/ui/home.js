@@ -1,91 +1,89 @@
 /**
- * The front page: what this is, and the one button that matters.
+ * The front page.
  *
- * For a returning learner the important thing on this screen is Continue.
- * For a new one it is the promise that nothing is being asked of them - no
- * account, no install, no payment - and a first lesson within one click.
+ * It opens with the product doing its job rather than a paragraph claiming it
+ * does. The trace on the right is live: real interpreter, real recording, the
+ * same one that runs inside a lesson.
+ *
+ * The specification block below it is written as a spec sheet on purpose. A
+ * course that teaches people to read error messages should not sell itself in
+ * marketing language.
  */
 
 import { escapeHtml } from '../highlight.js';
 import { progress } from '../state.js';
 import { Terminal } from './terminal.js';
+import { HeroTrace } from './hero-trace.js';
+
+let live = { trace: null, terminal: null };
+
+export function teardownHome() {
+  live.trace?.destroy();
+  live = { trace: null, terminal: null };
+}
 
 export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
+  teardownHome();
+
   const stats = progress.stats(manifest);
   const next = progress.nextLesson(manifest);
-  const started = stats.done > 0;
+  const lessonCount = manifest.modules.reduce((sum, module) => sum + module.lessons.length, 0);
   const totalMinutes = manifest.modules.reduce(
     (sum, module) => sum + module.lessons.reduce((inner, lesson) => inner + (lesson.estimate || 5), 0),
     0,
   );
-
-  const lessonCount = manifest.modules.reduce((sum, module) => sum + module.lessons.length, 0);
-  const hours = Math.floor(totalMinutes / 60);
-  const duration = hours >= 1 ? `about ${hours} hours` : `about ${totalMinutes} minutes`;
+  const hours = Math.round(totalMinutes / 60);
 
   mount.innerHTML = `
     <div class="home">
       <section class="hero">
-        <p class="hero-eyebrow">Free, open source, and yours to keep</p>
-        <h1>Learn to code. The Python below is real.</h1>
-        <p class="hero-sub">
-          ${lessonCount} lessons, ${duration}, every one of them checked by actually
-          running your code. No account. No install. Nothing you write leaves your
-          computer.
-        </p>
-        <div class="hero-actions">
-          ${
-            next
-              ? `<a class="btn btn-primary btn-large" href="#/lesson/${next.module}/${next.lesson}">
-                   ${started ? 'Continue' : 'Start the first lesson'} &rarr;
-                 </a>`
-              : `<a class="btn btn-primary btn-large" href="#/certificate">See your certificate &rarr;</a>`
-          }
-          <a class="btn btn-quiet btn-large" href="#/lesson/${manifest.modules[0].slug}/${manifest.modules[0].lessons[0].slug}">
-            Back to the beginning
-          </a>
-        </div>
-        ${
-          started
-            ? `<div class="hero-progress">
-                 <div class="nav-progress-bar"><span style="width:${stats.percent}%"></span></div>
-                 <p>${stats.done} of ${stats.total} done &middot; ${stats.percent}%</p>
-               </div>`
-            : ''
-        }
-
-        <div class="hero-demo">
-          <div class="hero-demo-head">
-            <span class="hero-demo-dot"></span>
-            <span>python 3.14 &middot; running here, in this tab</span>
+        <div class="hero-words">
+          <h1>Watch your<br>code run.</h1>
+          <p class="hero-sub">
+            Foothold teaches Python from nothing, in ${lessonCount} lessons. When an
+            exercise fails you can step back through your program a line at a
+            time and find the moment a variable stopped holding what you meant.
+          </p>
+          <p class="hero-fact">
+            It runs in this tab. Nothing you write is sent anywhere.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-large" href="${
+              next ? `#/lesson/${next.module}/${next.lesson}` : '#/certificate'
+            }">
+              ${stats.done ? 'Continue' : 'Start lesson one'}
+            </a>
+            ${
+              stats.done
+                ? `<span class="hero-progress-inline">
+                     <span class="nav-progress-bar"><span style="width:${stats.percent}%"></span></span>
+                     <span>${stats.done} of ${stats.total}</span>
+                   </span>`
+                : `<a class="btn btn-quiet btn-large" href="#/lesson/${manifest.modules[0].slug}/${manifest.modules[0].lessons[0].slug}">
+                     See lesson one
+                   </a>`
+            }
           </div>
-          <div class="js-hero-terminal"></div>
         </div>
+
+        <div class="hero-demo js-hero-trace"></div>
       </section>
 
-      <section class="pitch">
-        <article>
-          <h3>A terminal, not a text box</h3>
-          <p>Python 3.14 is compiled to WebAssembly and runs in a background
-             thread in your browser. Real errors, real tracebacks, a real
-             interactive prompt you can experiment in.</p>
-        </article>
-        <article>
-          <h3>Checked by running it</h3>
-          <p>Your answer is graded by executing it against real tests, not by
-             matching it against a string. Any correct solution passes, including
-             one nobody thought of.</p>
-        </article>
-        <article>
-          <h3>Works with the wifi off</h3>
-          <p>After the first visit the whole course is cached. Clone the
-             repository and it runs from a folder on your disk, forever, with
-             no server and no build step.</p>
-        </article>
+      <section class="spec">
+        <h2 class="rule">What it is</h2>
+        <dl class="spec-list">
+          <div><dt>Runtime</dt><dd>CPython 3.14, compiled to WebAssembly, running in a background thread of this page.</dd></div>
+          <div><dt>Grading</dt><dd>Your code is executed against real tests. Any answer that works passes, including one nobody planned for.</dd></div>
+          <div><dt>Debugger</dt><dd>Every exercise records each step it took. Scrub the slider and watch the variables move.</dd></div>
+          <div><dt>Accounts</dt><dd>None. Progress is kept in this browser and exports to a file you own.</dd></div>
+          <div><dt>Network</dt><dd>First visit only. After that the course is cached and works with the wifi off.</dd></div>
+          <div><dt>Length</dt><dd>${lessonCount} lessons across ${manifest.modules.length} modules, roughly ${hours} hours.</dd></div>
+          <div><dt>Licence</dt><dd>MIT. Fork it, teach with it, translate it.</dd></div>
+        </dl>
       </section>
 
       <section class="modules">
-        <h2>The course</h2>
+        <h2 class="rule">The route</h2>
         <ol class="module-cards">
           ${manifest.modules
             .map((module, index) => {
@@ -98,7 +96,7 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
                     <h3>${escapeHtml(module.title)}</h3>
                     <p>${escapeHtml(module.summary)}</p>
                     <span class="module-card-foot">
-                      ${done.done}/${done.total} lessons
+                      ${done.done}/${done.total}
                       ${complete ? '<span class="tick">&#10003;</span>' : ''}
                     </span>
                   </a>
@@ -108,12 +106,21 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
         </ol>
       </section>
 
+      <section class="scratch">
+        <h2 class="rule">Try something now</h2>
+        <p class="scratch-lead">
+          A Python prompt, with nothing riding on it. Type an expression and
+          press Enter.
+        </p>
+        <div class="scratch-terminal js-scratch"></div>
+      </section>
+
       <section class="keeping">
-        <h2>Your progress</h2>
+        <h2 class="rule">Your progress</h2>
         <p>
-          Foothold has no accounts and no server, so your progress lives in this
-          browser only. Export it to a file if you want it on another machine,
-          or as a backup before clearing your browser data.
+          Foothold has no server, so what you have finished lives in this
+          browser. Export it to a file to move it to another machine, or to keep
+          a copy before you clear your browsing data.
         </p>
         <div class="keeping-actions">
           <button class="btn btn-quiet js-export">Export progress</button>
@@ -126,10 +133,8 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
     </div>
   `;
 
-  // A working prompt, right there in the hero. Every other claim on this page
-  // is something the reader has to take on trust; this one they can test by
-  // typing 2 + 2 before they have clicked anything.
-  new Terminal(mount.querySelector('.js-hero-terminal'));
+  live.trace = new HeroTrace(mount.querySelector('.js-hero-trace'));
+  live.terminal = new Terminal(mount.querySelector('.js-scratch'));
 
   mount.querySelector('.js-export').addEventListener('click', onExport);
   mount.querySelector('.js-reset').addEventListener('click', onReset);

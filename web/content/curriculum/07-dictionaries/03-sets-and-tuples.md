@@ -19,7 +19,7 @@ print(visitors)
 print(len(visitors))
 ```
 
-Three, not four - the duplicate simply is not there.
+Three, not four - the duplicate is not there.
 
 The most common use is removing duplicates from a list:
 

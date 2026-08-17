@@ -8,9 +8,9 @@ concepts:
 ---
 
 There is a tradition, older than most people reading this, that the first
-program you write in any language just says hello. It is a small thing, but it
-proves the whole chain works: your code, the interpreter that reads it, the
-screen that shows the result.
+program you write in any language says hello and nothing else. It is a small
+thing, but it proves the whole chain works: your code, the interpreter that
+reads it, the screen that shows the result.
 
 In Python, showing something on screen is one word.
 

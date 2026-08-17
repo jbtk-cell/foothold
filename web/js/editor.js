@@ -29,6 +29,7 @@ export class Editor extends EventTarget {
     container.innerHTML = `
       <div class="editor-gutter" aria-hidden="true"></div>
       <div class="editor-surface">
+        <div class="editor-marker" aria-hidden="true" hidden></div>
         <pre class="editor-highlight" aria-hidden="true"><code></code></pre>
         <textarea class="editor-input" spellcheck="false" autocapitalize="off"
                   autocomplete="off" autocorrect="off" wrap="off"
@@ -40,6 +41,8 @@ export class Editor extends EventTarget {
     this.highlight = container.querySelector('.editor-highlight code');
     this.input = container.querySelector('.editor-input');
     this.surface = container.querySelector('.editor-surface');
+    this.marker = container.querySelector('.editor-marker');
+    this.markedLine = null;
 
     this.input.value = value;
     this.bind();
@@ -73,6 +76,56 @@ export class Editor extends EventTarget {
     this.highlight.parentElement.scrollTop = this.input.scrollTop;
     this.highlight.parentElement.scrollLeft = this.input.scrollLeft;
     this.gutter.scrollTop = this.input.scrollTop;
+    this.positionMarker();
+  }
+
+  /**
+   * Draw a band behind one line, for the trace scrubber to point at.
+   *
+   * The band is positioned from the computed line height rather than a
+   * hard-coded number, so changing the editor's type size in CSS cannot make
+   * the highlight drift off the line it is supposed to mark.
+   */
+  markLine(lineNumber) {
+    this.markedLine = lineNumber;
+    if (!lineNumber) {
+      this.marker.hidden = true;
+      this.gutter.querySelector('.is-current')?.classList.remove('is-current');
+      return;
+    }
+    this.marker.hidden = false;
+    this.positionMarker();
+    this.scrollLineIntoView(lineNumber);
+
+    this.gutter.querySelector('.is-current')?.classList.remove('is-current');
+    this.gutter.children[lineNumber - 1]?.classList.add('is-current');
+  }
+
+  lineHeight() {
+    if (!this._lineHeight) {
+      const computed = parseFloat(getComputedStyle(this.input).lineHeight);
+      this._lineHeight = Number.isFinite(computed) ? computed : 22;
+    }
+    return this._lineHeight;
+  }
+
+  positionMarker() {
+    if (!this.markedLine) return;
+    const padding = parseFloat(getComputedStyle(this.input).paddingTop) || 0;
+    const top = padding + (this.markedLine - 1) * this.lineHeight() - this.input.scrollTop;
+    this.marker.style.top = `${top}px`;
+    this.marker.style.height = `${this.lineHeight()}px`;
+  }
+
+  scrollLineIntoView(lineNumber) {
+    const height = this.lineHeight();
+    const top = (lineNumber - 1) * height;
+    const view = this.input.clientHeight;
+    if (top < this.input.scrollTop) {
+      this.input.scrollTop = Math.max(0, top - height);
+    } else if (top + height > this.input.scrollTop + view) {
+      this.input.scrollTop = top + height * 2 - view;
+    }
   }
 
   render() {

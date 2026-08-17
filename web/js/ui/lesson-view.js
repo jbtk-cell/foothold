@@ -14,6 +14,7 @@ import { renderMarkdown } from '../markdown.js';
 import { escapeHtml, highlightPython, highlightOutput } from '../highlight.js';
 import { Editor } from '../editor.js';
 import { Terminal } from './terminal.js';
+import { TracePanel } from './trace.js';
 import { runtime } from '../runtime.js';
 import { progress } from '../state.js';
 
@@ -84,6 +85,9 @@ export class LessonView {
               <button class="pane-tab" role="tab" data-pane="tests">
                 Checks <span class="tab-badge js-tests-badge"></span>
               </button>
+              <button class="pane-tab" role="tab" data-pane="trace">
+                Trace <span class="tab-new">new</span>
+              </button>
               <button class="pane-tab" role="tab" data-pane="terminal">Terminal</button>
             </div>
             <div class="pane is-active" data-pane="output">
@@ -91,6 +95,9 @@ export class LessonView {
             </div>
             <div class="pane" data-pane="tests">
               <div class="checks js-checks"><p class="console-empty">Press Check when you think it is right.</p></div>
+            </div>
+            <div class="pane" data-pane="trace">
+              <div class="js-trace"></div>
             </div>
             <div class="pane" data-pane="terminal">
               <div class="js-terminal"></div>
@@ -115,6 +122,11 @@ export class LessonView {
     this.testsBadge = this.mount.querySelector('.js-tests-badge');
 
     this.terminal = new Terminal(this.mount.querySelector('.js-terminal'));
+    this.trace = new TracePanel(this.mount.querySelector('.js-trace'), {
+      editor: this.editor,
+      getCode: () => this.editor.value,
+      getStdin: () => this.lesson.stdin,
+    });
 
     this.bind();
     this.renderHints();
@@ -141,6 +153,9 @@ export class LessonView {
       pane.classList.toggle('is-active', pane.dataset.pane === name);
     }
     if (name === 'terminal') this.terminal.focus();
+    // The executing-line highlight belongs to the trace. Leaving it behind
+    // while the learner edits would point at a line that no longer exists.
+    if (name !== 'trace') this.trace?.clear();
   }
 
   /** Give every example in the prose a button that drops it into the terminal. */
@@ -310,7 +325,18 @@ export class LessonView {
           <button class="btn btn-primary js-next">Next lesson &rarr;</button>
         </div>
       `);
-    } else if (report.stdout) {
+      this.trace?.clear();
+    } else {
+      parts.push(`
+        <div class="check-why">
+          <p>Not sure where it went wrong? Watch it run, line by line, and see
+             the moment a variable stops being what you expected.</p>
+          <button class="btn js-why"><span class="glyph">&#9673;</span> Show me why</button>
+        </div>
+      `);
+    }
+
+    if (!report.passed && report.stdout) {
       parts.push(
         `<details class="check-output"><summary>What your program printed</summary>` +
           `<pre class="console-out">${escapeHtml(report.stdout.replace(/\n$/, ''))}</pre></details>`,
@@ -319,6 +345,10 @@ export class LessonView {
 
     this.checksEl.innerHTML = parts.join('');
     this.checksEl.querySelector('.js-next')?.addEventListener('click', () => this.onNavigate?.('next'));
+    this.checksEl.querySelector('.js-why')?.addEventListener('click', () => {
+      this.showPane('trace');
+      this.trace.load({ jumpToEnd: true });
+    });
   }
 
   // --- Help ---------------------------------------------------------------

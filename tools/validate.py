@@ -204,6 +204,17 @@ def run_harness_tests(report: Report):
         report.error("harness", "the grading harness fails its own tests:\n" + proc.stdout[-2000:])
 
 
+def run_prose_lint(report: Report):
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "lint_prose.py"), "--errors"],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    if proc.returncode != 0:
+        report.error("prose", "the writing needs an edit:\n" + proc.stdout[-3000:])
+
+
 def run_web_tests(report: Report):
     node = _which_node()
     if not node:
@@ -231,6 +242,11 @@ def main() -> int:
     print("  browser modules ... ", end="", flush=True)
     before = len(report.errors)
     run_web_tests(report)
+    print(f"{RED}fail{RESET}" if len(report.errors) > before else f"{GREEN}ok{RESET}")
+
+    print("  prose ... ", end="", flush=True)
+    before = len(report.errors)
+    run_prose_lint(report)
     print(f"{RED}fail{RESET}" if len(report.errors) > before else f"{GREEN}ok{RESET}")
 
     try:

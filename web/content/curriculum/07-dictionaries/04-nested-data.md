@@ -21,7 +21,7 @@ people = [
 ]
 ```
 
-Getting at things is just the two syntaxes stacked up, read left to right:
+Getting at things is the two syntaxes stacked up, read left to right:
 
 ```python
 print(people[0]["name"])

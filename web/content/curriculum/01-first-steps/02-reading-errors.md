@@ -62,7 +62,7 @@ of working code
 ```
 
 Run it, read whatever error comes back, fix that one thing, run it again.
-That loop - run, read, fix - is most of what programming actually is.
+That loop - run, read, fix - is most of what programming is.
 
 ```python starter
 print("Two lines)

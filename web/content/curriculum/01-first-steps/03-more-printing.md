@@ -36,7 +36,7 @@ print("third")
 ```
 
 An empty `print()` with nothing inside prints nothing at all, which is to say
-it prints a blank line. That is genuinely useful for spacing output out.
+it prints a blank line. That is useful for spacing output out.
 
 ## Your turn
 

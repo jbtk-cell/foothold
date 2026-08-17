@@ -8,7 +8,7 @@
  */
 
 import { parseLesson } from './lesson.js';
-import { renderHome } from './ui/home.js';
+import { renderHome, teardownHome } from './ui/home.js';
 import { renderCertificate } from './ui/certificate.js';
 import { Sidebar } from './ui/sidebar.js';
 import { LessonView } from './ui/lesson-view.js';
@@ -110,6 +110,7 @@ async function route() {
   const target = parseRoute();
   document.body.dataset.route = target.name;
   closeNav();
+  if (target.name !== 'home') teardownHome();
 
   if (target.name === 'home') {
     app.sidebar?.setCurrent(null);

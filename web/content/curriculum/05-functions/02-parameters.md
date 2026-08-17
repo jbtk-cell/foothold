@@ -21,7 +21,7 @@ greet("Grace")
 
 `name` inside the parentheses of the `def` is a **parameter**: a variable that
 exists inside the function, whose value is supplied fresh on every call. The
-value you actually pass in - `"Ada"` - is the **argument**.
+value you pass in - `"Ada"` - is the **argument**.
 
 The parameter name is yours to choose and only means anything inside the
 function.

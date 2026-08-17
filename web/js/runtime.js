@@ -120,6 +120,17 @@ export class PythonRuntime extends EventTarget {
     return this.request('run', { code, stdin });
   }
 
+  /**
+   * Record every step the program takes, for the Trace panel.
+   *
+   * Tracing is much slower than running - roughly one settrace callback per
+   * line executed - so it gets a longer deadline than an ordinary run.
+   */
+  async trace(code, stdin = '') {
+    await this.boot();
+    return this.request('trace', { code, stdin }, 30_000);
+  }
+
   async grade(code, tests, stdin = '') {
     await this.boot();
     return this.request('grade', { code, tests, stdin });

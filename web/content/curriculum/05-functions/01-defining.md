@@ -21,7 +21,7 @@ greet()
 `def` starts a definition. Then the name, then parentheses, then a colon, then
 an indented block - the same shape as an `if`.
 
-Defining a function does not run it. The block just sits there with a name
+Defining a function does not run it. The block sits there with a name
 attached. It runs when you **call** it, which means writing its name followed
 by parentheses. Leave the parentheses off and nothing happens: `greet` on its
 own is the function itself, not a request to run it.

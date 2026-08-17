@@ -544,6 +544,220 @@
           "path": "curriculum/10-build-something/04-todo-list.md"
         }
       ]
+    },
+    {
+      "slug": "objects",
+      "title": "Objects of Your Own",
+      "summary": "Build your own types when a dictionary stops being enough.",
+      "lessons": [
+        {
+          "slug": "first-class",
+          "title": "Your First Class",
+          "goal": "Define a type, and create instances of it.",
+          "estimate": 9,
+          "concepts": [
+            "classes",
+            "objects"
+          ],
+          "path": "curriculum/11-objects/01-first-class.md"
+        },
+        {
+          "slug": "repr-and-dunder",
+          "title": "Making an Object Printable",
+          "goal": "Control how your object appears, and how it compares.",
+          "estimate": 9,
+          "concepts": [
+            "dunder methods",
+            "repr"
+          ],
+          "path": "curriculum/11-objects/02-repr-and-dunder.md"
+        },
+        {
+          "slug": "inheritance",
+          "title": "Building on a Class",
+          "goal": "Extend a class instead of copying it.",
+          "estimate": 10,
+          "concepts": [
+            "inheritance",
+            "super"
+          ],
+          "path": "curriculum/11-objects/03-inheritance.md"
+        },
+        {
+          "slug": "dataclasses",
+          "title": "Classes Without the Boilerplate",
+          "goal": "Use a dataclass when the class is mostly fields.",
+          "estimate": 8,
+          "concepts": [
+            "dataclasses"
+          ],
+          "path": "curriculum/11-objects/04-dataclasses.md"
+        },
+        {
+          "slug": "when-not-to",
+          "title": "When Not to Write a Class",
+          "goal": "Recognise the cases where a function is the better answer.",
+          "estimate": 8,
+          "concepts": [
+            "design"
+          ],
+          "path": "curriculum/11-objects/05-when-not-to.md"
+        }
+      ]
+    },
+    {
+      "slug": "standing-on-others",
+      "title": "Standing on Others' Work",
+      "summary": "Import the library that already solved your problem.",
+      "lessons": [
+        {
+          "slug": "importing",
+          "title": "Importing",
+          "goal": "Bring in code from outside your file, three different ways.",
+          "estimate": 8,
+          "concepts": [
+            "import",
+            "modules"
+          ],
+          "path": "curriculum/12-standing-on-others/01-importing.md"
+        },
+        {
+          "slug": "counting-tools",
+          "title": "Tools for Counting",
+          "goal": "Replace hand-written counting loops with the collections module.",
+          "estimate": 8,
+          "concepts": [
+            "collections",
+            "Counter"
+          ],
+          "path": "curriculum/12-standing-on-others/02-counting-tools.md"
+        },
+        {
+          "slug": "json",
+          "title": "Saving Structured Data",
+          "goal": "Write dictionaries and lists to a file and read them back unchanged.",
+          "estimate": 9,
+          "concepts": [
+            "json",
+            "files"
+          ],
+          "path": "curriculum/12-standing-on-others/03-json.md"
+        },
+        {
+          "slug": "dates",
+          "title": "Dates and Times",
+          "goal": "Do arithmetic on dates without counting days yourself.",
+          "estimate": 9,
+          "concepts": [
+            "datetime"
+          ],
+          "path": "curriculum/12-standing-on-others/04-dates.md"
+        }
+      ]
+    },
+    {
+      "slug": "algorithms",
+      "title": "Thinking in Algorithms",
+      "summary": "Solve the same problem two ways and measure which one holds up.",
+      "lessons": [
+        {
+          "slug": "recursion",
+          "title": "Functions That Call Themselves",
+          "goal": "Write a recursive function with a base case that stops it.",
+          "estimate": 10,
+          "concepts": [
+            "recursion"
+          ],
+          "path": "curriculum/13-algorithms/01-recursion.md"
+        },
+        {
+          "slug": "searching",
+          "title": "Two Ways to Find Something",
+          "goal": "Write binary search, and understand why it beats scanning.",
+          "estimate": 10,
+          "concepts": [
+            "searching",
+            "complexity"
+          ],
+          "path": "curriculum/13-algorithms/02-searching.md"
+        },
+        {
+          "slug": "sorting",
+          "title": "Sorting",
+          "goal": "Write a sort by hand, then use the one that ships with Python.",
+          "estimate": 10,
+          "concepts": [
+            "sorting",
+            "key functions"
+          ],
+          "path": "curriculum/13-algorithms/03-sorting.md"
+        },
+        {
+          "slug": "choosing-a-structure",
+          "title": "Picking the Right Container",
+          "goal": "Choose between a list, a set and a dictionary by how it will be used.",
+          "estimate": 9,
+          "concepts": [
+            "complexity",
+            "data structures"
+          ],
+          "path": "curriculum/13-algorithms/04-choosing-a-structure.md"
+        }
+      ]
+    },
+    {
+      "slug": "a-real-project",
+      "title": "A Real Project",
+      "summary": "Build one program across four lessons, the way software actually gets written.",
+      "lessons": [
+        {
+          "slug": "the-model",
+          "title": "The Data Model",
+          "goal": "Design the shape of the data before writing anything that uses it.",
+          "estimate": 11,
+          "concepts": [
+            "dataclasses",
+            "validation",
+            "project"
+          ],
+          "path": "curriculum/14-a-real-project/01-the-model.md"
+        },
+        {
+          "slug": "the-operations",
+          "title": "The Operations",
+          "goal": "Write the functions that change and query a list of tasks.",
+          "estimate": 11,
+          "concepts": [
+            "functions",
+            "sorting",
+            "project"
+          ],
+          "path": "curriculum/14-a-real-project/02-the-operations.md"
+        },
+        {
+          "slug": "storage",
+          "title": "Making It Survive",
+          "goal": "Save the tasks to disk and load them back, including the parts JSON cannot hold.",
+          "estimate": 11,
+          "concepts": [
+            "json",
+            "dataclasses",
+            "project"
+          ],
+          "path": "curriculum/14-a-real-project/03-storage.md"
+        },
+        {
+          "slug": "the-interface",
+          "title": "The Interface",
+          "goal": "Put a command interface on the program and finish it.",
+          "estimate": 14,
+          "concepts": [
+            "project",
+            "parsing"
+          ],
+          "path": "curriculum/14-a-real-project/04-the-interface.md"
+        }
+      ]
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 The most valuable contribution is a lesson, or a fix to one that confused you.
 If a lesson confused you, that is a bug in the lesson, not in you, and an issue
-saying which sentence lost you is genuinely useful.
+saying which sentence lost you is useful.
 
 ## What you need
 
@@ -102,7 +102,7 @@ A plain `assert` works too. The assertion message is what the learner reads.
 ### Test the behaviour, not the keystrokes
 
 Any correct solution must pass. Grade the output and the return values, and
-reach for `SOURCE` only when the lesson is genuinely *about* how something is
+reach for `SOURCE` only when the lesson is *about* how something is
 written - "use a loop rather than four prints", "this one is about
 comprehensions".
 
@@ -149,7 +149,7 @@ read-and-run, add `starter_passes: true` to the front matter.
 The lessons have a voice, and keeping it consistent matters more than any
 individual sentence.
 
-- Explain *why*, not just *what*. "Two equals signs, not one" is a rule to
+- Explain *why* as well as *what*. "Two equals signs, not one" is a rule to
   memorise; "`=` is a command and `==` is a question" is something to
   understand.
 - Address the reader as "you". Never "we".
