@@ -11,6 +11,8 @@ back through your own program a line at a time and watch the variables change
 until you find the moment one stopped holding what you meant.
 
 No account. No install. No server. Nothing you write leaves your computer.
+[What that means exactly](PRIVACY.md), for anyone who has to justify the
+choice to a school.
 
 **[Start the course](https://jbtk-cell.github.io/foothold/)**
 

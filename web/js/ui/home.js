@@ -46,6 +46,8 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
           </p>
           <p class="hero-fact">
             It runs in this tab. Nothing you write is sent anywhere.
+            <a class="hero-fact-link" href="https://github.com/jbtk-cell/foothold/blob/main/PRIVACY.md"
+               target="_blank" rel="noopener noreferrer">What that means exactly</a>
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary btn-large" href="${

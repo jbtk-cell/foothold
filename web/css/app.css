@@ -1508,6 +1508,14 @@ p { margin: 0 0 1em; }
 .error-page h1 { font-family: var(--font-display); font-size: 30px; margin-bottom: 14px; }
 .error-page p { color: var(--ink-soft); }
 
+.hero-fact-link {
+  color: var(--ink-faint);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.hero-fact-link:hover { color: var(--signal); }
+
 .lesson-report {
   margin-top: 26px;
   font-size: 13px;
