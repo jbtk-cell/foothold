@@ -26,13 +26,84 @@
 <meta name="twitter:description" content="A free Python course with a step-through debugger in every exercise.">
 <meta name="twitter:image" content="https://jbtk-cell.github.io/foothold/assets/social.png">
 
+<!--
+  A locked-down policy. There is no account and no cookie here, so the thing
+  worth preventing is lesson content or a compromised dependency pulling code
+  in from somewhere we did not choose.
+
+  wasm-unsafe-eval is what Pyodide needs to compile its WebAssembly; it does
+  not permit eval of JavaScript. blob: covers the throwaway worker used to ask
+  whether this browser supports module workers at all. The four hosts are the
+  sources Python itself is fetched from, listed in js/worker.js.
+-->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net https://fastly.jsdelivr.net https://gcore.jsdelivr.net https://unpkg.com;
+  worker-src 'self' blob:;
+  connect-src 'self' blob: data: https://cdn.jsdelivr.net https://fastly.jsdelivr.net https://gcore.jsdelivr.net https://unpkg.com;
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: blob:;
+  font-src 'self';
+  object-src 'none';
+  base-uri 'none';
+  form-action 'none';
+  manifest-src 'self';
+">
+
+<link rel="canonical" href="https://jbtk-cell.github.io/foothold/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
+<!-- iOS ignores the web app manifest when someone adds a page to their home
+     screen. Without this it screenshots the page instead, which looks broken. -->
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Foothold">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="css/app.css">
+
+<!-- Search engines and AI answer engines both read this. Google retired the
+     course rich result in 2025, but the vocabulary is still what tells them
+     this is a free beginner course rather than a landing page. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "Foothold",
+  "description": "A free, open source course that takes someone from never having programmed to building a small application, with a real Python interpreter and a step-through debugger running inside the browser.",
+  "url": "https://jbtk-cell.github.io/foothold/",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "teaches": "Python programming for complete beginners",
+  "educationalLevel": "Beginner",
+  "learningResourceType": "Interactive course",
+  "timeRequired": "PT8H23M",
+  "license": "https://opensource.org/licenses/MIT",
+  "provider": {
+    "@type": "Organization",
+    "name": "Foothold",
+    "url": "https://github.com/jbtk-cell/foothold",
+    "sameAs": "https://github.com/jbtk-cell/foothold"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "category": "Free",
+    "availability": "https://schema.org/InStock"
+  },
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "online",
+    "courseWorkload": "PT8H23M"
+  }
+}
+</script>
 </head>
 <body data-route="home">
 
 <a class="skip-link" href="#view">Skip to content</a>
+
+<!-- Anything a learner needs to hear rather than see. See js/announce.js. -->
+<div id="announcer" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <header class="topbar">
   <button id="nav-toggle" class="icon-btn nav-only" aria-label="Show the course list">
@@ -51,7 +122,7 @@
   </a>
 
   <div class="topbar-right">
-    <span id="runtime-status" class="runtime-status" data-kind="idle">Python not started</span>
+    <span id="runtime-status" class="runtime-status" data-kind="idle" role="status">Python not started</span>
     <button id="theme-toggle" class="icon-btn" aria-label="Switch between dark and light">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"
            stroke-linecap="round" aria-hidden="true">
@@ -68,6 +139,8 @@
   </div>
 </header>
 
+<div id="runtime-alert" class="runtime-alert" role="alert" hidden></div>
+
 <div class="shell">
   <aside id="nav" class="sidebar" aria-label="Course contents"></aside>
   <div class="nav-scrim" aria-hidden="true"></div>
@@ -83,5 +156,6 @@
 </noscript>
 
 <script type="module" src="js/app.js"></script>
+<script nomodule src="js/legacy.js"></script>
 </body>
 </html>

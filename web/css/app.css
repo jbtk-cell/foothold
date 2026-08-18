@@ -29,12 +29,19 @@
   --surface-2: #1d2b39;
   --ink: #e6ecf1;
   --ink-soft: #90a3b4;
-  --ink-faint: #61758a;
+  /* Held at 4.5:1 against --surface-2, the lightest thing it ever sits on.
+     Anything dimmer looked better and failed WCAG AA, and this text carries
+     the module numbers and lesson counts, which people need to read. */
+  --ink-faint: #7f93a8;
   --line: #263543;
   --line-strong: #35495c;
 
   --signal: #ff5c39;
   --signal-soft: rgba(255, 92, 57, 0.14);
+  /* Vermilion is too bright to carry white text: 3.07:1, under the 4.5 a
+     primary button needs. Dark ink on it reads at 6.08 and looks like what
+     it is, a lit key with the legend cut out of it. */
+  --on-signal: #0b131d;
   --machine: #46c8e0;
   --machine-soft: rgba(70, 200, 224, 0.13);
   --pass: #4cc38a;
@@ -76,19 +83,21 @@
   --surface-2: #edf1f5;
   --ink: #101b2b;
   --ink-soft: #48596b;
-  --ink-faint: #7b8d9e;
+  --ink-faint: #536576;
   --line: #c6d1da;
   --line-strong: #a6b6c3;
 
-  --signal: #c8380f;
-  --signal-soft: rgba(200, 56, 15, 0.1);
-  --machine: #0b6f88;
-  --machine-soft: rgba(11, 111, 136, 0.1);
-  --pass: #0f6e4e;
-  --pass-soft: rgba(15, 110, 78, 0.1);
+  --signal: #bc2c03;
+  --signal-soft: rgba(188, 44, 3, 0.1);
+  /* The light theme's deeper red carries white at 5.21:1. */
+  --on-signal: #ffffff;
+  --machine: #096d86;
+  --machine-soft: rgba(9, 109, 134, 0.1);
+  --pass: #096848;
+  --pass-soft: rgba(9, 104, 72, 0.1);
   --fail: #a5301c;
   --fail-soft: rgba(165, 48, 28, 0.09);
-  --note: #0b6f88;
+  --note: #096d86;
 
   --tok-keyword: #a63a05;
   --tok-string: #1c6b41;
@@ -139,7 +148,7 @@ p { margin: 0 0 1em; }
   top: 8px;
   z-index: 100;
   background: var(--signal);
-  color: #fff;
+  color: var(--on-signal);
   padding: 8px 14px;
   border-radius: var(--radius);
 }
@@ -173,7 +182,7 @@ p { margin: 0 0 1em; }
 .btn-primary {
   background: var(--signal);
   border-color: var(--signal);
-  color: #fff;
+  color: var(--on-signal);
   font-weight: 600;
 }
 .btn-primary:hover { background: var(--signal); filter: brightness(1.08); border-color: var(--signal); }
@@ -419,7 +428,7 @@ p { margin: 0 0 1em; }
 .nav-lesson.is-done .nav-tick {
   background: var(--signal);
   border-color: var(--signal);
-  color: #fff;
+  color: var(--on-signal);
 }
 .nav-lesson.is-done { color: var(--ink); }
 
@@ -948,6 +957,8 @@ p { margin: 0 0 1em; }
 
 .editor {
   display: flex;
+  /* The keyboard hint wraps onto its own line under the gutter and surface. */
+  flex-wrap: wrap;
   width: 100%;
   min-width: 0;
   background: var(--bg);
@@ -1496,6 +1507,100 @@ p { margin: 0 0 1em; }
 .error-page { max-width: 620px; margin: 0 auto; padding: 80px 26px; text-align: center; }
 .error-page h1 { font-family: var(--font-display); font-size: 30px; margin-bottom: 14px; }
 .error-page p { color: var(--ink-soft); }
+
+.lesson-report {
+  margin-top: 26px;
+  font-size: 13px;
+  text-align: center;
+}
+.lesson-report a { color: var(--ink-faint); text-decoration: underline; text-underline-offset: 3px; }
+.lesson-report a:hover { color: var(--signal); }
+
+/* Present to a screen reader, absent to everyone else. Not display:none,
+   which would take it out of the accessibility tree along with the layout. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The way out of the editor. A textarea that eats Tab is a keyboard trap, so
+   the escape hatch has to be visible rather than folklore. */
+
+.editor-keys {
+  flex: 0 0 100%;
+  padding: 6px 12px 8px;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+  background: var(--bg-sunk);
+}
+.editor-keys kbd {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 1px 4px;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  color: var(--ink-soft);
+  background: var(--surface);
+}
+.editor.is-releasing .editor-keys {
+  color: var(--machine);
+  border-top-color: var(--machine);
+}
+.editor.is-releasing .editor-keys::after { content: ' Tab now moves on.'; }
+
+/* --- When Python cannot start ---------------------------------------------
+   Every exercise needs the interpreter, so this is not a warning to tuck in a
+   corner. It sits under the header, across the full width, and stays until
+   Python starts or the learner retries. */
+
+.runtime-alert {
+  border-bottom: 1px solid var(--fail);
+  background: var(--fail-soft);
+}
+.runtime-alert[hidden] { display: none; }
+
+.runtime-alert-body {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18px 26px 20px;
+}
+.runtime-alert h2 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.runtime-alert p { color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+.runtime-alert-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.runtime-alert details { margin-top: 12px; }
+.runtime-alert summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+}
+.runtime-alert pre {
+  margin-top: 8px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  background: var(--bg-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+}
 
 /* --- Responsive ----------------------------------------------------------- */
 

@@ -51,7 +51,7 @@ jobs:
           node-version: '22'
 
       - name: Install Playwright
-        run: npm install --no-save playwright@1.62.1 && npx playwright install --with-deps chromium
+        run: npm install --no-save playwright@1.62.1 axe-core@4 && npx playwright install --with-deps chromium
 
       - name: Serve the site
         run: |
@@ -66,6 +66,13 @@ jobs:
 
       - name: Grade every lesson in the browser runtime
         run: node tools/check_in_browser.mjs http://localhost:8777
+
+      # Contrast, keyboard-only use, what a screen reader is told, and whether
+      # the course survives a network that blocks the CDN it downloads Python
+      # from. These fail quietly and land on the people least able to route
+      # around them, so they are checked rather than assumed.
+      - name: Check access and resilience
+        run: node tools/check_access.mjs http://localhost:8777
 
       - name: Upload screenshots
         if: always()

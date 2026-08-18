@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "Foothold: learn Python by watching your code run"
+message: "If you use Foothold in teaching or research, please cite it."
+type: software
+authors:
+  - name: "The Foothold contributors"
+repository-code: "https://github.com/jbtk-cell/foothold"
+url: "https://jbtk-cell.github.io/foothold/"
+abstract: >-
+  A free, open source introductory Python course that runs entirely in the
+  browser. It grades every exercise by executing it against real tests in
+  CPython compiled to WebAssembly, and includes a step-through debugger inside
+  each exercise so a learner can replay their own program a line at a time and
+  watch the variables change.
+keywords:
+  - python
+  - computer science education
+  - programming education
+  - introductory programming
+  - webassembly
+  - open educational resources
+license: MIT

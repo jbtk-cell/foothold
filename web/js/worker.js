@@ -19,41 +19,111 @@
 /* eslint-env worker */
 
 const PYODIDE_VERSION = '314.0.4';
-const CDN = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 const LOCAL = new URL('../vendor/pyodide/', self.location.href).href;
+
+/**
+ * Where to look for Python, in the order we try them.
+ *
+ * The order carries more weight than it appears to. cdn.jsdelivr.net is
+ * DNS-blocked across mainland China and on a good number of school and
+ * corporate networks, and a learner who cannot reach it has no course at
+ * all, because every exercise needs the interpreter. fastly. and gcore. are
+ * jsDelivr's own alternate hostnames and stay reachable through that block.
+ * unpkg belongs to a different company, so one bad afternoon at jsDelivr
+ * does not take every option down at once.
+ *
+ * A vendored copy beats all of them; tools/vendor_pyodide.sh puts one there.
+ */
+const SOURCES = [
+  { url: LOCAL, label: 'this computer', local: true },
+  { url: `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`, label: 'jsDelivr' },
+  { url: `https://fastly.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`, label: 'jsDelivr via Fastly' },
+  { url: `https://gcore.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`, label: 'jsDelivr via Gcore' },
+  { url: `https://unpkg.com/pyodide@${PYODIDE_VERSION}/`, label: 'unpkg' },
+];
+
+const PROBE_MS = 8000;
 
 let pyodide = null;
 let api = null;
 
 /**
- * Prefer a vendored copy of Pyodide when one exists.
+ * Ask whether a source answers at all, and give up quickly when it does not.
  *
- * tools/vendor_pyodide.sh downloads it, which is what makes Foothold work on
- * a laptop with no internet - a classroom on bad wifi, a plane, a country
- * where the CDN is blocked. Without it we fall back to the CDN.
+ * A blocked host often blackholes the connection rather than refusing it, so
+ * without a deadline one dead mirror would spend the whole boot budget and
+ * the working mirror further down the list would never get a turn.
  */
-async function resolveIndexURL() {
+async function reachable(url) {
+  const stop = new AbortController();
+  const timer = setTimeout(() => stop.abort(), PROBE_MS);
   try {
-    const probe = await fetch(`${LOCAL}pyodide.mjs`, { method: 'HEAD' });
-    if (probe.ok) return LOCAL;
+    const response = await fetch(`${url}pyodide.mjs`, { method: 'HEAD', signal: stop.signal });
+    return response.ok;
   } catch {
-    /* no local copy; that is the normal case */
+    return false;
+  } finally {
+    clearTimeout(timer);
   }
-  return CDN;
 }
 
+async function loadFrom(source) {
+  const { loadPyodide } = await import(/* @vite-ignore */ `${source.url}pyodide.mjs`);
+  return loadPyodide({ indexURL: source.url });
+}
+
+/**
+ * Work down the list until one source hands us a running interpreter.
+ *
+ * Reaching pyodide.mjs is not proof the rest will arrive - a filter can pass
+ * the small file and drop the 10 MB of WebAssembly behind it - so success
+ * means loadPyodide returned, not that a probe went through.
+ */
 function progress(stage, detail = '') {
   self.postMessage({ type: 'progress', stage, detail });
+}
+
+async function startPython() {
+  const failures = [];
+  const tried = new Set();
+
+  const attempt = async (source) => {
+    tried.add(source.url);
+    progress('downloading', source.local ? 'the copy on this computer' : source.label);
+    try {
+      return await loadFrom(source);
+    } catch (error) {
+      failures.push(`${source.label}: ${String((error && error.message) || error)}`);
+      return null;
+    }
+  };
+
+  // Only sources that answer, so one blackholed host costs the probe deadline
+  // instead of the entire boot budget.
+  for (const source of SOURCES) {
+    if (!(await reachable(source.url))) continue;
+    const running = await attempt(source);
+    if (running) return running;
+  }
+
+  // Some proxies allow GET and refuse HEAD, which would have made every probe
+  // above lie. Try the remote sources again without asking first.
+  for (const source of SOURCES) {
+    if (source.local || tried.has(source.url)) continue;
+    const running = await attempt(source);
+    if (running) return running;
+  }
+
+  const error = new Error('Python could not be downloaded from any of the places we know to look.');
+  error.code = 'RUNTIME_UNREACHABLE';
+  error.detail = failures.join('\n') || 'Nothing answered.';
+  throw error;
 }
 
 async function init() {
   if (pyodide) return;
 
-  const indexURL = await resolveIndexURL();
-  progress('downloading', indexURL === LOCAL ? 'local copy' : 'first visit only');
-
-  const { loadPyodide } = await import(/* @vite-ignore */ `${indexURL}pyodide.mjs`);
-  pyodide = await loadPyodide({ indexURL });
+  pyodide = await startPython();
 
   progress('starting', 'Python 3.14');
 
@@ -161,6 +231,14 @@ self.onmessage = async (event) => {
     const result = await handler(payload || {});
     self.postMessage({ id, ok: true, result });
   } catch (error) {
-    self.postMessage({ id, ok: false, error: String((error && error.message) || error) });
+    self.postMessage({
+      id,
+      ok: false,
+      error: String((error && error.message) || error),
+      // A boot failure needs different words from a failed exercise, so the
+      // main thread gets told which kind it is rather than guessing.
+      code: (error && error.code) || null,
+      detail: (error && error.detail) || null,
+    });
   }
 };

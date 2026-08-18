@@ -15,7 +15,7 @@
  * activate so a stale build cannot outlive a deploy.
  */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const SHELL_CACHE = `foothold-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `foothold-python-${CACHE_VERSION}`;
 
@@ -25,10 +25,16 @@ const SHELL = [
   './manifest.webmanifest',
   './assets/favicon.svg',
   './assets/social.png',
+  './assets/icon-192.png',
+  './assets/icon-512.png',
+  './assets/icon-maskable-512.png',
+  './assets/apple-touch-icon.png',
   './css/app.css',
+  './js/announce.js',
   './js/app.js',
   './js/editor.js',
   './js/highlight.js',
+  './js/legacy.js',
   './js/lesson.js',
   './js/markdown.js',
   './js/runtime.js',
@@ -36,22 +42,44 @@ const SHELL = [
   './js/worker.js',
   './js/ui/certificate.js',
   './js/ui/home.js',
+  './js/ui/hero-trace.js',
   './js/ui/lesson-view.js',
   './js/ui/sidebar.js',
   './js/ui/terminal.js',
+  './js/ui/trace.js',
   './py/harness.py',
   './py/console.py',
+  './py/tracer.py',
   './content/manifest.json',
 ];
 
+/**
+ * Every lesson, not only the ones already read.
+ *
+ * Caching on demand would mean a learner who goes offline can revisit what
+ * they have seen and cannot reach lesson eleven, which is the opposite of
+ * useful - the point of working offline is carrying on. The whole curriculum
+ * is about 400 KB of Markdown, so there is no reason to be clever about it.
+ */
+async function lessonURLs() {
+  const response = await fetch('./content/manifest.json');
+  if (!response.ok) return [];
+  const manifest = await response.json();
+  return manifest.modules.flatMap((module) =>
+    module.lessons.map((lesson) => `./content/${lesson.path}`),
+  );
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(SHELL_CACHE)
+    (async () => {
+      const cache = await caches.open(SHELL_CACHE);
+      const lessons = await lessonURLs().catch(() => []);
       // addAll fails as a unit if any single file 404s, which would leave the
       // learner with no offline copy at all. Failing per-file is kinder.
-      .then((cache) => Promise.all(SHELL.map((url) => cache.add(url).catch(() => {}))))
-      .then(() => self.skipWaiting()),
+      await Promise.all([...SHELL, ...lessons].map((url) => cache.add(url).catch(() => {})));
+      await self.skipWaiting();
+    })(),
   );
 });
 

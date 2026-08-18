@@ -1,0 +1,5 @@
+# Foothold is a free course. Index all of it.
+User-agent: *
+Allow: /
+
+Sitemap: https://jbtk-cell.github.io/foothold/sitemap.xml
