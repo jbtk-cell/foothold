@@ -207,6 +207,7 @@ python3 tools/lint_prose.py            # writing quality
 node tools/smoke_test.mjs              # end to end in a browser
 node tools/check_in_browser.mjs        # grade all 60 in Pyodide
 node tools/check_access.mjs            # contrast, keyboard, offline, blocked CDN
+node tools/check_engines.mjs           # the same course in Safari and Firefox
 ```
 
 `validate.py` is the gate. Per lesson it checks that the reference solution
@@ -231,6 +232,11 @@ only the keyboard, reads back what a screen reader would be told, blocks
 jsDelivr to confirm the fallback sources work, blocks every source to confirm
 the failure is explained, and pulls the network down to confirm an unopened
 lesson still opens. It needs `npm install --no-save playwright axe-core`.
+
+`check_engines.mjs` boots Python, runs a program and records a trace in WebKit
+and Firefox. Foothold leans on a module worker, a dynamic import inside it, and
+WebAssembly compilation, which are the three things those engines shipped later
+than Chrome, and a gap in any of them leaves someone with no course at all.
 
 ---
 
