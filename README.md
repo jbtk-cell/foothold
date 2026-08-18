@@ -14,7 +14,10 @@ No account. No install. No server. Nothing you write leaves your computer.
 
 **[Start the course](https://jbtk-cell.github.io/foothold/)**
 
-![The Foothold home page, showing a live execution trace](docs/screenshots/home.png)
+![A failed check, then stepping back through the program to find the variable that never changed](docs/demo.gif)
+
+*A check fails. Press **Show me why**, scrub back through the program, and watch
+`count` sit at zero while `total` climbs.*
 
 ---
 
@@ -248,6 +251,8 @@ The motif throughout is a marked line. Down the sidebar it is a climbing route
 with a hold per lesson, filling in as you climb. Across the trace it is a tape
 with a tick per recorded step. Section headings sit on a measuring rule with
 major and minor marks. Same graphic idea, rotated.
+
+![The Foothold home page](docs/screenshots/home.png)
 
 Two colours carry meaning and never swap jobs. Vermilion is you: your route,
 your progress, your turn. Cyan is the machine: execution, output, the trace. A

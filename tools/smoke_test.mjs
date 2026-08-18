@@ -178,6 +178,29 @@ async function main() {
   check('the variables panel shows the accumulator', /total/.test(varsText), varsText);
   check('a changed value shows what it was', /was/.test(varsText), varsText);
 
+  // The marker must land on the line the trace names, not merely somewhere.
+  // A highlight two rows off is worse than no highlight at all.
+  const alignment = await page.evaluate(() => {
+    const gutter = document.querySelector('.editor-gutter');
+    const current = gutter.querySelector('.is-current');
+    if (!current) return { ok: false, why: 'no line marked in the gutter' };
+    const marker = document.querySelector('.editor-marker').getBoundingClientRect().top;
+    const row = current.getBoundingClientRect().top;
+    const named = /line (\d+)/.exec(document.querySelector('.js-what').textContent);
+    return {
+      ok: Math.abs(marker - row) < 1.5,
+      drift: Math.round(marker - row),
+      gutterLine: Array.from(gutter.children).indexOf(current) + 1,
+      namedLine: named ? Number(named[1]) : null,
+    };
+  });
+  check('the marker sits exactly on its line', alignment.ok, `drifted ${alignment.drift}px`);
+  check(
+    'the marked line is the one the trace names',
+    alignment.namedLine === null || alignment.namedLine === alignment.gutterLine,
+    `gutter says ${alignment.gutterLine}, text says ${alignment.namedLine}`,
+  );
+
   const markerTop = await page.evaluate(() => document.querySelector('.editor-marker').style.top);
   await page.click('.js-first');
   await page.waitForTimeout(200);

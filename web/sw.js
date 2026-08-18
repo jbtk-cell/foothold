@@ -24,6 +24,7 @@ const SHELL = [
   './index.html',
   './manifest.webmanifest',
   './assets/favicon.svg',
+  './assets/social.png',
   './css/app.css',
   './js/app.js',
   './js/editor.js',
