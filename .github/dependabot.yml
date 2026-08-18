@@ -1,0 +1,13 @@
+# The site ships no JavaScript dependencies, so the only thing worth watching
+# is the actions the workflows pin. A stale action is how a supply chain gets
+# in, and nobody notices on a project that builds green every week.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"

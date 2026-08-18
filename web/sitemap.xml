@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The course is one page. Lessons are hash fragments, which crawlers treat as
+  the same URL, so listing them here would claim pages that do not exist.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://jbtk-cell.github.io/foothold/</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

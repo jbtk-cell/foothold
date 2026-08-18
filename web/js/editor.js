@@ -18,6 +18,7 @@ import { highlightPython } from './highlight.js';
 const INDENT = '    ';
 const PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
 const CLOSERS = new Set([')', ']', '}', '"', "'"]);
+const MODIFIERS = new Set(['Shift', 'Control', 'Alt', 'Meta', 'CapsLock']);
 
 export class Editor extends EventTarget {
   constructor(container, { value = '', onRun = null } = {}) {
@@ -33,8 +34,12 @@ export class Editor extends EventTarget {
         <pre class="editor-highlight" aria-hidden="true"><code></code></pre>
         <textarea class="editor-input" spellcheck="false" autocapitalize="off"
                   autocomplete="off" autocorrect="off" wrap="off"
-                  aria-label="Code editor"></textarea>
+                  aria-label="Code editor" aria-describedby="editor-keys"></textarea>
       </div>
+      <p class="editor-keys" id="editor-keys">
+        Tab indents. Press <kbd>Esc</kbd> then <kbd>Tab</kbd> to leave the editor.
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> runs your program.
+      </p>
     `;
 
     this.gutter = container.querySelector('.editor-gutter');
@@ -43,6 +48,13 @@ export class Editor extends EventTarget {
     this.surface = container.querySelector('.editor-surface');
     this.marker = container.querySelector('.editor-marker');
     this.markedLine = null;
+
+    // Set by Escape, cleared by anything else. While it is true the next Tab
+    // moves focus instead of indenting, which is the only way out of here for
+    // someone using a keyboard. Without it this textarea is a trap, and
+    // WCAG 2.1.2 calls that a failure - correctly, since the alternative is
+    // closing the tab. CodeMirror and Monaco solve it the same way.
+    this.tabLeaves = false;
 
     this.input.value = value;
     this.bind();
@@ -144,6 +156,27 @@ export class Editor extends EventTarget {
 
   onKeyDown(event) {
     const meta = event.metaKey || event.ctrlKey;
+
+    if (event.key === 'Escape') {
+      this.tabLeaves = true;
+      this.container.classList.add('is-releasing');
+      return;
+    }
+
+    if (event.key === 'Tab' && this.tabLeaves) {
+      // Let the browser do what it always does with Tab: move on.
+      this.tabLeaves = false;
+      this.container.classList.remove('is-releasing');
+      return;
+    }
+
+    // Any other key means they are still writing code, so indenting resumes.
+    // Modifiers do not count: Shift+Tab is how you leave going backwards, and
+    // pressing Shift would otherwise cancel the escape before Tab arrived.
+    if (!MODIFIERS.has(event.key)) {
+      this.tabLeaves = false;
+      this.container.classList.remove('is-releasing');
+    }
 
     if (meta && event.key === 'Enter') {
       event.preventDefault();

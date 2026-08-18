@@ -67,9 +67,24 @@ same file GitHub Actions imports. On every push, each reference solution must
 pass its own tests and each starter must *fail* them, so an exercise that asks
 the learner to do nothing cannot be merged.
 
-**Works with the wifi off.** After the first visit a service worker caches the
-course. Clone the repository and it runs from a folder on your disk with no
-toolchain.
+**Works with the wifi off.** The first visit caches all 60 lessons, not only
+the pages you opened, so going offline at lesson three does not stop you
+reaching lesson four. Clone the repository and it runs from a folder on your
+disk with no toolchain.
+
+**Survives a filtered network.** Python is fetched from four independent
+sources. jsDelivr is DNS-blocked across mainland China and on plenty of school
+networks, and a learner who cannot reach it has no course at all, so Foothold
+falls through to jsDelivr's Fastly and Gcore hostnames and then to unpkg. When
+every one of them is refused, the page says so in words a beginner can act on
+instead of showing them a fetch error.
+
+**Usable without a mouse or a working pair of eyes.** Every colour pair meets
+WCAG AA in both themes. The editor takes Tab for indentation, and Escape then
+Tab gets you out of it, which the page tells you rather than leaving you to
+guess. A failed check is announced with the reason it failed. All of that is
+checked on every push by `tools/check_access.mjs`, because it is the kind of
+thing that breaks quietly.
 
 ---
 
@@ -189,6 +204,7 @@ python3 tools/validate.py              # harness, JS units, all 60 lessons
 python3 tools/lint_prose.py            # writing quality
 node tools/smoke_test.mjs              # end to end in a browser
 node tools/check_in_browser.mjs        # grade all 60 in Pyodide
+node tools/check_access.mjs            # contrast, keyboard, offline, blocked CDN
 ```
 
 `validate.py` is the gate. Per lesson it checks that the reference solution
@@ -207,6 +223,12 @@ recovering from an infinite loop.
 
 `check_in_browser.mjs` grades all 60 reference solutions inside Pyodide, since
 its filesystem and standard library are not identical to a desktop build.
+
+`check_access.mjs` runs axe-core over both themes, completes a lesson using
+only the keyboard, reads back what a screen reader would be told, blocks
+jsDelivr to confirm the fallback sources work, blocks every source to confirm
+the failure is explained, and pulls the network down to confirm an unopened
+lesson still opens. It needs `npm install --no-save playwright axe-core`.
 
 ---
 

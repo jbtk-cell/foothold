@@ -17,8 +17,32 @@ import { Terminal } from './terminal.js';
 import { TracePanel } from './trace.js';
 import { runtime } from '../runtime.js';
 import { progress } from '../state.js';
+import { announce } from '../announce.js';
 
 const MAX_INPUT_ROUNDS = 200;
+
+/**
+ * The check result as a sentence.
+ *
+ * On screen the verdict is a word and the reason is a list beside it. Read
+ * aloud, the word on its own tells a learner nothing they can act on, so the
+ * first thing that went wrong comes with it.
+ */
+function summarise(report) {
+  if (report.error) {
+    const firstLine = String(report.error).trim().split('\n').pop();
+    return `Your program did not finish. ${firstLine}`;
+  }
+
+  const total = report.tests.length;
+  const passed = report.tests.filter((test) => test.passed).length;
+
+  if (report.passed) return `Passed. All ${total} checks passed.`;
+
+  const failed = report.tests.find((test) => !test.passed);
+  const why = failed ? ` ${failed.name}. ${failed.message || ''}`.trimEnd() : '';
+  return `Not yet. ${passed} of ${total} checks passed.${why}`;
+}
 
 export class LessonView {
   constructor({ mount, moduleMeta, lesson, onComplete, onNavigate }) {
@@ -274,6 +298,7 @@ export class LessonView {
     }
 
     this.renderChecks(report);
+    announce(summarise(report));
 
     if (report.passed) {
       this.setStatus('Passed', 'is-ok');

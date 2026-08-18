@@ -43,8 +43,16 @@ export class PythonRuntime extends EventTarget {
       if (!entry) return;
       this.pending.delete(data.id);
       clearTimeout(entry.timer);
-      if (data.ok) entry.resolve(data.result);
-      else entry.reject(new Error(data.error));
+      if (data.ok) {
+        entry.resolve(data.result);
+      } else {
+        // Carry the worker's classification across. "Python never arrived"
+        // and "your loop never ended" want completely different words.
+        const error = new Error(data.error);
+        if (data.code) error.code = data.code;
+        if (data.detail) error.detail = data.detail;
+        entry.reject(error);
+      }
     };
 
     this.worker.onerror = (event) => {
@@ -86,7 +94,7 @@ export class PythonRuntime extends EventTarget {
       this.bootPromise = this.request('init', {}, BOOT_TIMEOUT_MS).catch((error) => {
         this.bootPromise = null;
         this.status = 'crashed';
-        this.emit('crashed', { message: error.message });
+        this.emit('crashed', { message: error.message, code: error.code, detail: error.detail });
         throw error;
       });
     }

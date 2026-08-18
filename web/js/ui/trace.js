@@ -194,6 +194,13 @@ export class TracePanel {
     this.countEl.textContent = `${index + 1} / ${this.steps.length}`;
     this.editor.markLine(step.line);
 
+    // A range input read aloud says "12" and stops. What a learner scrubbing
+    // the trace needs to hear is which line they have landed on.
+    this.slider.setAttribute(
+      'aria-valuetext',
+      `Step ${index + 1} of ${this.steps.length}, line ${step.line}`,
+    );
+
     this.whatEl.innerHTML = this.describe(step);
     this.whatEl.className = `trace-what js-what is-${step.event}`;
 
