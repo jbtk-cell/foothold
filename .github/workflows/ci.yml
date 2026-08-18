@@ -36,6 +36,34 @@ jobs:
       - name: Check the tracer
         run: python3 tools/test_tracer.py
 
+  engines:
+    name: Safari and Firefox engines
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright
+        run: npm install --no-save playwright@1.62.1 && npx playwright install --with-deps webkit firefox
+
+      - name: Serve the site
+        run: |
+          nohup python3 -m http.server 8778 --directory web > /tmp/serve-engines.log 2>&1 &
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:8778/index.html > /dev/null && break
+            sleep 1
+          done
+
+      # Foothold needs a module worker, a dynamic import inside it, and
+      # WebAssembly compilation. Those are the three things Safari and Firefox
+      # have historically implemented later than Chrome, and a failure in any
+      # of them means the course does not run at all for that person.
+      - name: Boot Python and record a trace in both engines
+        run: node tools/check_engines.mjs http://localhost:8778
+
   browser:
     name: End to end in Chromium
     runs-on: ubuntu-latest
