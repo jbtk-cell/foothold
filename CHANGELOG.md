@@ -3,7 +3,7 @@
 Notable changes to Foothold. Dates are the day the change reached the live
 site.
 
-## 1.0.0 - 2026-08-18
+## 1.0.0 - 2026-08-19
 
 First public release. 60 lessons across 14 modules, roughly eight and a half
 hours of work, every exercise graded by running it.
@@ -31,6 +31,10 @@ hours of work, every exercise graded by running it.
 - Check results are announced with the reason they failed, not only the
   verdict.
 
+- A privacy statement naming the two requests that leave the device and the
+  two localStorage keys that stay on it, for anyone who has to justify the
+  choice to a school.
+
 ### Infrastructure
 
 - CI proves every reference solution passes its own tests and every starter
@@ -38,3 +42,9 @@ hours of work, every exercise graded by running it.
 - The browser's lesson parser is diffed against the Python one on every push,
   so a learner cannot read a lesson differently from the validator that
   approved it.
+- `tools/check_access.mjs` runs axe-core over both themes, completes a lesson
+  on the keyboard alone, reads back what a screen reader is told, blocks the
+  CDN, and pulls the network down to confirm an unopened lesson still opens.
+- `tools/check_engines.mjs` boots Python and records a trace in WebKit and
+  Firefox, which were never tested before.
+- A content security policy, and every pinned GitHub action brought current.
