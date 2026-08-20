@@ -7,6 +7,9 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    # The default is five, and there were exactly five actions to update, so
+    # two more sat queued behind the cap with nothing on screen saying so.
+    open-pull-requests-limit: 10
     commit-message:
       prefix: "ci"
     labels:
