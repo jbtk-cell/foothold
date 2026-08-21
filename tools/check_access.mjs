@@ -140,6 +140,97 @@ section('the security policy');
   await context.close();
 }
 
+// --- Syntax colours ---------------------------------------------------------
+//
+// axe cannot judge these. The editor is a transparent textarea sitting on a
+// highlighted <pre>, so axe reports every token as "incomplete" rather than as
+// a pass or a failure, and a clean axe run says nothing about the code a
+// learner spends the whole course reading. Three real failures hid behind that
+// for months, the worst being the comment in every starter file at 2.74:1.
+// So the contrast is computed here directly.
+
+section('the colours code is written in');
+
+{
+  // Passed as a real function rather than a string. The first version of this
+  // built the helper as a template literal, which quietly turned the regex
+  // /[\d.]+/ into /[d.]+/ - so it matched no digits, every colour parsed to an
+  // empty array, every ratio came out NaN, and `NaN < 4.5` is false. The check
+  // passed on colours that were failing by a mile. A check that cannot fail is
+  // worse than no check, because it is also a claim.
+  const worstTokenContrast = () => {
+    const lin = (c) => {
+      c /= 255;
+      return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    };
+    const lum = (rgb) => 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
+    const ratio = (a, b) => {
+      const x = lum(a);
+      const y = lum(b);
+      return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+    };
+    const parse = (value) => {
+      const found = value.match(/[0-9]+(\.[0-9]+)?/g) || [];
+      return found.slice(0, 3).map(Number);
+    };
+    const solidBehind = (el) => {
+      let node = el;
+      while (node && node !== document.documentElement) {
+        const colour = getComputedStyle(node).backgroundColor;
+        const parts = parse(colour);
+        const alpha = colour.startsWith('rgba') ? parseFloat(colour.split(',')[3]) : 1;
+        if (parts.length === 3 && alpha > 0.95) return parts;
+        node = node.parentElement;
+      }
+      return [255, 255, 255];
+    };
+
+    let lowest = { ratio: null, token: 'none', seen: 0 };
+    document.querySelectorAll('[class*="tok-"]').forEach((el) => {
+      if (!el.textContent.trim()) return;
+      const token = [...el.classList].find((c) => c.startsWith('tok-')) || 'unknown';
+      const colour = parse(getComputedStyle(el).color);
+      const behind = solidBehind(el);
+      if (colour.length !== 3 || behind.length !== 3) return;
+      const r = ratio(colour, behind);
+      if (!Number.isFinite(r)) return;
+      lowest.seen += 1;
+      if (lowest.ratio === null || r < lowest.ratio) {
+        lowest.ratio = Number(r.toFixed(2));
+        lowest.token = token;
+      }
+    });
+    return lowest;
+  };
+
+  for (const [where, url] of [['the home page', HOME], ['a lesson', LESSON]]) {
+    for (const theme of ['dark', 'light']) {
+      const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+      const page = await context.newPage();
+      await page.goto(url, { waitUntil: 'networkidle' });
+      await page.waitForSelector('.view', { timeout: 30_000 }).catch(() => {});
+      await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+      await page.waitForTimeout(2500);
+
+      const worst = await page.evaluate(worstTokenContrast);
+
+      // If nothing was measured the check has stopped testing anything, which
+      // must read as a failure rather than as a pass.
+      check(
+        `syntax colours were actually measured on ${where} (${theme})`,
+        worst.seen > 0,
+        `${worst.seen} tokens found`,
+      );
+      check(
+        `every syntax colour on ${where} clears 4.5:1 (${theme})`,
+        worst.ratio !== null && worst.ratio >= 4.5,
+        `worst was ${worst.token} at ${worst.ratio}`,
+      );
+      await context.close();
+    }
+  }
+}
+
 // --- Reporting a break ------------------------------------------------------
 
 section('when the page itself breaks');
