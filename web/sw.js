@@ -37,6 +37,7 @@ const SHELL = [
   './js/legacy.js',
   './js/lesson.js',
   './js/markdown.js',
+  './js/reporter.js',
   './js/runtime.js',
   './js/state.js',
   './js/worker.js',

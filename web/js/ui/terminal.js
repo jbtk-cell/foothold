@@ -189,7 +189,14 @@ export class Terminal {
     const prefix = match ? match[0] : '';
     if (!prefix) return;
 
-    const names = await runtime.complete(prefix);
+    // Tab-completion is a convenience. If the interpreter is busy, restarting,
+    // or was never reachable, the useful behaviour is for Tab to do nothing.
+    let names;
+    try {
+      names = await runtime.complete(prefix);
+    } catch {
+      return;
+    }
     if (!names.length) return;
 
     if (names.length === 1) {
@@ -225,7 +232,12 @@ export class Terminal {
   }
 
   async reset() {
-    await runtime.resetConsole();
+    try {
+      await runtime.resetConsole();
+    } catch (error) {
+      this.write(`The interpreter could not be reset: ${error.message}`, 'err');
+      return;
+    }
     this.clear();
     this.write('Interpreter reset. Every variable you defined is gone.', 'banner');
   }

@@ -16,6 +16,7 @@ import { runtime } from './runtime.js';
 import { progress } from './state.js';
 import { escapeHtml } from './highlight.js';
 import { announce } from './announce.js';
+import { watchForErrors, offerToReport } from './reporter.js';
 
 const CONTENT_BASE = new URL('../content/', import.meta.url);
 
@@ -121,6 +122,9 @@ async function showRuntimeAlert({ message, code, detail }) {
             whole room.`;
   } else {
     body = escapeHtml(message || 'Something went wrong while starting the interpreter.');
+    // Not the network, not a runaway loop, and the browser is new enough.
+    // Whatever this is, nobody knows about it yet.
+    offerToReport({ message: `Python did not start: ${message}`, stack: detail || '' });
   }
 
   alertEl.innerHTML = `
@@ -374,6 +378,7 @@ function toggleTheme() {
 
 async function start() {
   applyTheme();
+  watchForErrors();
 
   try {
     app.manifest = await loadManifest();

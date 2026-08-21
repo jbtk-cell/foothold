@@ -1566,6 +1566,30 @@ p { margin: 0 0 1em; }
 }
 .editor.is-releasing .editor-keys::after { content: ' Tab now moves on.'; }
 
+/* --- Offering to report a break -------------------------------------------
+   Bottom corner, out of the way of the editor and the output, and gone the
+   moment it is dismissed. It is an offer, not an error dialog. */
+
+.reporter {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 200;
+  max-width: 330px;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--fail);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+.reporter-what { font-size: 13px; line-height: 1.5; color: var(--ink); }
+.reporter-actions { display: flex; gap: 8px; margin-top: 11px; align-items: center; }
+.reporter-fine { margin-top: 9px; font-size: 11px; color: var(--ink-faint); }
+
+@media (max-width: 560px) {
+  .reporter { right: 10px; bottom: 10px; left: 10px; max-width: none; }
+}
+
 /* --- When Python cannot start ---------------------------------------------
    Every exercise needs the interpreter, so this is not a warning to tuck in a
    corner. It sits under the header, across the full width, and stays until
