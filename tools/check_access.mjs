@@ -140,6 +140,69 @@ section('the security policy');
   await context.close();
 }
 
+// --- Reporting a break ------------------------------------------------------
+
+section('when the page itself breaks');
+
+{
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await openLesson(context);
+
+  await page.evaluate(() => setTimeout(() => { throw new Error('deliberate test explosion'); }, 0));
+  const offered = await page
+    .waitForSelector('.reporter', { timeout: 15_000 })
+    .then(() => true)
+    .catch(() => false);
+  check('a page error offers a report', offered);
+
+  if (offered) {
+    const href = await page.getAttribute('.js-report', 'href');
+    const url = new URL(href);
+    check('the report is prefilled', url.searchParams.get('template') === 'bug.yml');
+    check(
+      'it names the lesson they were on',
+      /first-steps\/hello-world/.test(url.searchParams.get('what') || ''),
+    );
+    check('it carries the stack', /deliberate test explosion/.test(url.searchParams.get('console') || ''));
+    check('the link is short enough for GitHub', href.length < 6000, `${href.length} chars`);
+    check(
+      'it promises nothing is sent yet',
+      /Nothing is sent unless/.test(await page.innerText('.reporter')),
+    );
+
+    // A thing that breaks tends to break repeatedly.
+    await page.evaluate(() => setTimeout(() => { throw new Error('second explosion'); }, 0));
+    await page.waitForTimeout(800);
+    check('a second error does not stack a second note', (await page.locator('.reporter').count()) === 1);
+
+    await page.click('.js-dismiss');
+    await page.waitForTimeout(300);
+    check('it can be dismissed', (await page.locator('.reporter').count()) === 0);
+  }
+  await context.close();
+}
+
+{
+  // The learner's own infinite loop is expected, is explained where it happens,
+  // and must not turn into an issue on the tracker.
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await openLesson(context);
+  await page.waitForFunction(
+    () => document.getElementById('runtime-status')?.dataset.kind === 'ok',
+    { timeout: 180_000 },
+  );
+  await page.evaluate(() => {
+    const input = document.querySelector('.editor-input');
+    input.value = 'while True:\n    pass';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await page.click('.js-run');
+  await page.waitForTimeout(14_000);
+  check('a runaway loop is not reported as a bug', (await page.locator('.reporter').count()) === 0);
+  check('and is still explained where it happened', /too long|stopped/i.test(await page.innerText('body')));
+  await context.close();
+}
+
 // --- Keyboard ---------------------------------------------------------------
 
 section('finishing a lesson without a mouse');

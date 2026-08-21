@@ -69,6 +69,13 @@ same file GitHub Actions imports. On every push, each reference solution must
 pass its own tests and each starter must *fail* them, so an exercise that asks
 the learner to do nothing cannot be merged.
 
+**It tells you when it breaks.** Nothing is tracked, which leaves one real
+hole: a site with analytics learns within the hour that it is broken on some
+browser, and a site without them can go a year. So when the page throws, a note
+offers to report it and the button opens a GitHub issue with the error, the
+browser and the lesson already filled in. Nothing is sent unless the learner
+presses it.
+
 **Works with the wifi off.** The first visit caches all 60 lessons, not only
 the pages you opened, so going offline at lesson three does not stop you
 reaching lesson four. Clone the repository and it runs from a folder on your
@@ -197,6 +204,11 @@ are available, along with helpers like `expect_output`, `expect_calling` and
 [CONTRIBUTING.md](CONTRIBUTING.md) has the full guide, including how to write
 a failure message that teaches instead of accusing.
 
+If you would rather improve the course than the code,
+[docs/first-five-learners.md](docs/first-five-learners.md) is a method for
+sitting with someone who has never programmed and writing down where they get
+stuck. It is worth more than any amount of testing.
+
 ---
 
 ## Testing
@@ -209,6 +221,12 @@ node tools/check_in_browser.mjs        # grade all 60 in Pyodide
 node tools/check_access.mjs            # contrast, keyboard, offline, blocked CDN
 node tools/check_engines.mjs           # the same course in Safari and Firefox
 ```
+
+Two more scripts make the pictures rather than checking anything:
+`tools/make_demo_gif.mjs` records `docs/demo.gif` for the README, and
+`tools/make_short_video.mjs` records `docs/short.mp4`, a 9:16 cut of the same
+fifteen seconds, shaped for the phones where most people who cannot code yet
+spend their time.
 
 `validate.py` is the gate. Per lesson it checks that the reference solution
 passes its own tests, that the starter fails them, that the starter is valid
