@@ -53,7 +53,11 @@
   --tok-keyword: #ff8f6b;
   --tok-string: #9ed7a4;
   --tok-number: #d8c06a;
-  --tok-comment: #5f7183;
+  /* Comments carry instructions here - every starter file opens with one -
+     so they are held to the 4.5:1 that body text needs, measured against a
+     line with the trace marker on it, which is the lightest a comment ever
+     sits on. Receding further would look better and be unreadable. */
+  --tok-comment: #8799ab;
   --tok-builtin: #7fc3e8;
   --tok-call: #e4ebf0;
   --tok-defname: #ffd08a;
@@ -99,10 +103,10 @@
   --fail-soft: rgba(165, 48, 28, 0.09);
   --note: #096d86;
 
-  --tok-keyword: #a63a05;
-  --tok-string: #1c6b41;
-  --tok-number: #8a6100;
-  --tok-comment: #7e91a1;
+  --tok-keyword: #a23601;
+  --tok-string: #18673d;
+  --tok-number: #7a5100;
+  --tok-comment: #4a5d6d;
   --tok-builtin: #0f5f8a;
   --tok-call: #14202b;
   --tok-defname: #7a4b00;
