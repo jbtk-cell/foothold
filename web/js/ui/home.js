@@ -132,6 +132,19 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
         </div>
         <input type="file" accept="application/json,.json" class="js-file" hidden>
       </section>
+
+      <section class="keeping">
+        <h2 class="rule">Using this with a group</h2>
+        <p>
+          Free for classrooms, clubs and libraries. Nothing to install, and no
+          student data collected, so there is no agreement to sign. The teachers'
+          page covers pacing, and how to help someone who is stuck when you do
+          not write Python yourself.
+        </p>
+        <div class="keeping-actions">
+          <a class="btn btn-quiet" href="#/teachers">For teachers and clubs</a>
+        </div>
+      </section>
     </div>
   `;
 

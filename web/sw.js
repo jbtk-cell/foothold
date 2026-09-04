@@ -15,7 +15,7 @@
  * activate so a stale build cannot outlive a deploy.
  */
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const SHELL_CACHE = `foothold-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `foothold-python-${CACHE_VERSION}`;
 
@@ -40,6 +40,7 @@ const SHELL = [
   './js/reporter.js',
   './js/runtime.js',
   './js/state.js',
+  './js/ui/teachers.js',
   './js/worker.js',
   './js/ui/certificate.js',
   './js/ui/home.js',
