@@ -14,12 +14,12 @@ No account. No install. No server. Nothing you write leaves your computer.
 [What that means exactly](PRIVACY.md), for anyone who has to justify the
 choice to a school.
 
-**[Start the course](https://jbtk-cell.github.io/foothold/)**
+**[Start the course](https://foothold.school/)**
 
 Teaching with it? [Running Foothold with a group](docs/for-educators.md) covers fit, pacing,
 and how to help a stuck student without writing Python yourself. There is a
 [one-page handout](docs/session-handout.md) for whoever is in the room, and a
-[page for programme directors](https://jbtk-cell.github.io/foothold/#/teachers).
+[page for programme directors](https://foothold.school/#/teachers).
 
 ![A failed check, then stepping back through the program to find the variable that never changed](docs/demo.gif)
 

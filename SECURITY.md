@@ -39,7 +39,7 @@ waiting.
 ## Scope
 
 In scope: this repository, and the site published from it at
-<https://jbtk-cell.github.io/foothold/>.
+<https://foothold.school/>.
 
 Out of scope: Pyodide, CPython, GitHub Pages, and the CDNs. Report those to
 their own maintainers, who will handle them better than we can.
