@@ -10,6 +10,7 @@
 import { parseLesson } from './lesson.js';
 import { renderHome, teardownHome } from './ui/home.js';
 import { renderCertificate } from './ui/certificate.js';
+import { renderTeachers } from './ui/teachers.js';
 import { Sidebar } from './ui/sidebar.js';
 import { LessonView } from './ui/lesson-view.js';
 import { runtime } from './runtime.js';
@@ -203,6 +204,7 @@ function parseRoute() {
 
   if (!parts.length) return { name: 'home' };
   if (parts[0] === 'certificate') return { name: 'certificate' };
+  if (parts[0] === 'teachers') return { name: 'teachers' };
   if (parts[0] === 'lesson' && parts.length >= 3) {
     return { name: 'lesson', module: parts[1], lesson: parts[2] };
   }
@@ -227,6 +229,14 @@ async function route() {
     app.sidebar?.setCurrent(null);
     renderCertificate(main, app.manifest);
     document.title = 'Foothold - certificate';
+    return;
+  }
+
+  if (target.name === 'teachers') {
+    app.sidebar?.setCurrent(null);
+    renderTeachers(main, app.manifest);
+    document.title = 'Foothold for teachers, clubs, and libraries';
+    window.scrollTo(0, 0);
     return;
   }
 

@@ -23,6 +23,9 @@ const AXE = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const HOME = `${BASE}/index.html#/`;
 const LESSON = `${BASE}/index.html#/lesson/first-steps/hello-world`;
+// The page a school or club lands on from an email. It is the first thing a
+// programme director sees, so it is held to the same bar as the course.
+const TEACHERS = `${BASE}/index.html#/teachers`;
 // Deliberately one nobody has opened, to prove the whole course is cached and
 // not only the pages already read.
 const UNREAD = `${BASE}/index.html#/lesson/lists/comprehensions`;
@@ -58,7 +61,7 @@ async function openLesson(context, url = LESSON) {
 
 section('colour contrast');
 
-for (const [label, url] of [['home', HOME], ['a lesson', LESSON]]) {
+for (const [label, url] of [['home', HOME], ['a lesson', LESSON], ['the teachers page', TEACHERS]]) {
   for (const theme of ['dark', 'light']) {
     // bypassCSP because axe is injected inline, which the page's own policy
     // forbids. The policy itself is checked further down.
@@ -87,7 +90,7 @@ for (const [label, url] of [['home', HOME], ['a lesson', LESSON]]) {
 
 section('the rest of WCAG that a machine can judge');
 
-for (const [label, url] of [['home', HOME], ['a lesson', LESSON]]) {
+for (const [label, url] of [['home', HOME], ['a lesson', LESSON], ['the teachers page', TEACHERS]]) {
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, bypassCSP: true });
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
@@ -203,7 +206,10 @@ section('the colours code is written in');
     return lowest;
   };
 
-  for (const [where, url] of [['the home page', HOME], ['a lesson', LESSON]]) {
+  // Only pages that actually render code. The teachers page has none, and the
+// 'measured something' guard below correctly refuses to pass a sweep that
+// found zero tokens.
+for (const [where, url] of [['the home page', HOME], ['a lesson', LESSON]]) {
     for (const theme of ['dark', 'light']) {
       const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
       const page = await context.newPage();

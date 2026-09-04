@@ -16,6 +16,11 @@ choice to a school.
 
 **[Start the course](https://jbtk-cell.github.io/foothold/)**
 
+Teaching with it? [Running Foothold with a group](docs/for-educators.md) covers fit, pacing,
+and how to help a stuck student without writing Python yourself. There is a
+[one-page handout](docs/session-handout.md) for whoever is in the room, and a
+[page for programme directors](https://jbtk-cell.github.io/foothold/#/teachers).
+
 ![A failed check, then stepping back through the program to find the variable that never changed](docs/demo.gif)
 
 *A check fails. Press **Show me why**, scrub back through the program, and watch
