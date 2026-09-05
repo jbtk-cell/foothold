@@ -15,7 +15,7 @@
  * activate so a stale build cannot outlive a deploy.
  */
 
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const SHELL_CACHE = `foothold-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `foothold-python-${CACHE_VERSION}`;
 

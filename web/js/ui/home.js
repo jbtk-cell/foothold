@@ -71,20 +71,22 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
         <div class="hero-demo js-hero-trace"></div>
       </section>
 
-      <section class="spec">
+      <section class="spec band">
         <h2 class="rule">What it is</h2>
-        <dl class="spec-list">
-          <div><dt>Runtime</dt><dd>CPython 3.14, compiled to WebAssembly, running in a background thread of this page.</dd></div>
-          <div><dt>Grading</dt><dd>Your code is executed against real tests. Any answer that works passes, including one nobody planned for.</dd></div>
-          <div><dt>Debugger</dt><dd>Every exercise records each step it took. Scrub the slider and watch the variables move.</dd></div>
-          <div><dt>Accounts</dt><dd>None. Progress is kept in this browser and exports to a file you own.</dd></div>
-          <div><dt>Network</dt><dd>First visit only. After that the course is cached and works with the wifi off.</dd></div>
-          <div><dt>Length</dt><dd>${lessonCount} lessons across ${manifest.modules.length} modules, roughly ${hours} hours.</dd></div>
-          <div><dt>Licence</dt><dd>MIT. Fork it, teach with it, translate it.</dd></div>
-        </dl>
+        <div class="band-body">
+          <dl class="spec-list">
+            <div><dt>Runtime</dt><dd>CPython 3.14, compiled to WebAssembly, running in a background thread of this page.</dd></div>
+            <div><dt>Grading</dt><dd>Your code is executed against real tests. Any answer that works passes, including one nobody planned for.</dd></div>
+            <div><dt>Debugger</dt><dd>Every exercise records each step it took. Scrub the slider and watch the variables move.</dd></div>
+            <div><dt>Accounts</dt><dd>None. Progress is kept in this browser and exports to a file you own.</dd></div>
+            <div><dt>Network</dt><dd>First visit only. After that the course is cached and works with the wifi off.</dd></div>
+            <div><dt>Length</dt><dd>${lessonCount} lessons across ${manifest.modules.length} modules, roughly ${hours} hours.</dd></div>
+            <div><dt>Licence</dt><dd>MIT. Fork it, teach with it, translate it.</dd></div>
+          </dl>
+        </div>
       </section>
 
-      <section class="modules">
+      <section class="modules band-wide">
         <h2 class="rule">The route</h2>
         <ol class="module-cards">
           ${manifest.modules
@@ -108,41 +110,47 @@ export function renderHome(mount, manifest, { onExport, onImport, onReset }) {
         </ol>
       </section>
 
-      <section class="scratch">
+      <section class="scratch band">
         <h2 class="rule">Try something now</h2>
-        <p class="scratch-lead">
-          A Python prompt, with nothing riding on it. Type an expression and
-          press Enter.
-        </p>
-        <div class="scratch-terminal js-scratch"></div>
-      </section>
-
-      <section class="keeping">
-        <h2 class="rule">Your progress</h2>
-        <p>
-          Foothold has no server, so what you have finished lives in this
-          browser. Export it to a file to move it to another machine, or to keep
-          a copy before you clear your browsing data.
-        </p>
-        <div class="keeping-actions">
-          <button class="btn btn-quiet js-export">Export progress</button>
-          <button class="btn btn-quiet js-import">Import progress</button>
-          <a class="btn btn-quiet" href="#/certificate">Certificate</a>
-          <button class="btn btn-danger js-reset">Erase everything</button>
+        <div class="band-body">
+          <p class="scratch-lead">
+            A Python prompt, with nothing riding on it. Type an expression and
+            press Enter.
+          </p>
+          <div class="scratch-terminal js-scratch"></div>
         </div>
-        <input type="file" accept="application/json,.json" class="js-file" hidden>
       </section>
 
-      <section class="keeping">
+      <section class="keeping band">
+        <h2 class="rule">Your progress</h2>
+        <div class="band-body">
+          <p>
+            Foothold has no server, so what you have finished lives in this
+            browser. Export it to a file to move it to another machine, or to keep
+            a copy before you clear your browsing data.
+          </p>
+          <div class="keeping-actions">
+            <button class="btn btn-quiet js-export">Export progress</button>
+            <button class="btn btn-quiet js-import">Import progress</button>
+            <a class="btn btn-quiet" href="#/certificate">Certificate</a>
+            <button class="btn btn-danger js-reset">Erase everything</button>
+          </div>
+          <input type="file" accept="application/json,.json" class="js-file" hidden>
+        </div>
+      </section>
+
+      <section class="keeping band">
         <h2 class="rule">Using this with a group</h2>
-        <p>
-          Free for classrooms, clubs and libraries. Nothing to install, and no
-          student data collected, so there is no agreement to sign. The teachers'
-          page covers pacing, and how to help someone who is stuck when you do
-          not write Python yourself.
-        </p>
-        <div class="keeping-actions">
-          <a class="btn btn-quiet" href="#/teachers">For teachers and clubs</a>
+        <div class="band-body">
+          <p>
+            Free for classrooms, clubs and libraries. Nothing to install, and no
+            student data collected, so there is no agreement to sign. The teachers'
+            page covers pacing, and how to help someone who is stuck when you do
+            not write Python yourself.
+          </p>
+          <div class="keeping-actions">
+            <a class="btn btn-quiet" href="#/teachers">For teachers and clubs</a>
+          </div>
         </div>
       </section>
     </div>

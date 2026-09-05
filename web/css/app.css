@@ -191,8 +191,12 @@ p { margin: 0 0 1em; }
 }
 .btn-primary:hover { background: var(--signal); filter: brightness(1.08); border-color: var(--signal); }
 
-.btn-check { border-color: var(--pass); color: var(--pass); background: var(--pass-soft); }
-.btn-check:hover { background: var(--pass-soft); border-color: var(--pass); filter: brightness(1.1); }
+/* Run is the filled button on this screen and it is the only one. Check used
+   to be a full green outline on a green wash beside it, so the workbench
+   opened with two buttons of equal shout and no clear first move. The tick
+   keeps the colour; the button does not. */
+.btn-check .glyph { color: var(--pass); }
+.btn-check:hover { border-color: var(--pass); }
 
 .btn-quiet { background: transparent; border-color: var(--line); color: var(--ink-soft); }
 .btn-quiet:hover { color: var(--ink); border-color: var(--line-strong); background: var(--surface-2); }
@@ -303,6 +307,48 @@ p { margin: 0 0 1em; }
 .view:focus { outline: none; }
 
 .nav-scrim { display: none; }
+
+/* --- The route list is for people already on the route ---------------------
+   On a lesson the sidebar is the map and belongs open. On the front page it
+   is sixty links to lessons nobody has started, taking the first third of the
+   screen before a visitor has read a word, and pushing the page it competes
+   with hard against the left edge. So on the pages that introduce Foothold it
+   becomes the same drawer it already is on a phone, behind the button that is
+   already in the header. Nothing new to learn, and the page gets its width.  */
+
+body[data-route='home'] .shell,
+body[data-route='teachers'] .shell,
+body[data-route='certificate'] .shell {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body[data-route='home'] .sidebar,
+body[data-route='teachers'] .sidebar,
+body[data-route='certificate'] .sidebar {
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0;
+  width: var(--sidebar-w);
+  z-index: 50;
+  transform: translateX(-100%);
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+body[data-route='home'].nav-open .sidebar,
+body[data-route='teachers'].nav-open .sidebar,
+body[data-route='certificate'].nav-open .sidebar {
+  transform: none;
+}
+
+body[data-route='home'].nav-open .nav-scrim,
+body[data-route='teachers'].nav-open .nav-scrim,
+body[data-route='certificate'].nav-open .nav-scrim {
+  display: block;
+  position: fixed;
+  inset: var(--topbar-h) 0 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 45;
+}
 
 /* --- Sidebar: the route --------------------------------------------------- */
 
@@ -459,19 +505,22 @@ p { margin: 0 0 1em; }
    right. A centred hero with a headline and two buttons is the shape every
    product page has; this one earns its space by showing the thing.          */
 
-.home { max-width: 1120px; margin: 0 auto; padding: 54px 26px 100px; }
+.home { max-width: 1120px; margin: 0 auto; padding: 54px 26px 76px; }
 
+/* The demo gets the larger half. The headline promises that you can watch
+   your code run; the panel to the right is the only thing on the page that
+   proves it, and it was rendered smaller than the sentence describing it. */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-  gap: 46px;
-  align-items: start;
-  margin-bottom: 20px;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 52px;
+  align-items: center;
+  margin-bottom: 84px;
 }
 
 .hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(42px, 6.2vw, 76px);
+  font-size: clamp(42px, 5.6vw, 68px);
   line-height: 0.97;
   letter-spacing: -0.018em;
   margin-bottom: 22px;
@@ -550,15 +599,22 @@ p { margin: 0 0 1em; }
 }
 .hero-trace-toggle:hover { color: var(--ink); border-color: var(--line-strong); }
 
-.hero-trace-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+/* A floor under the panel, so the two hero columns finish at roughly the same
+   depth and the output pane has somewhere to appear rather than pushing the
+   layout down when the program finally prints. */
+.hero-trace-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  min-height: 246px;
+}
 
 .hero-code {
   list-style: none;
   margin: 0;
-  padding: 12px 0;
+  padding: 16px 0;
   font-family: var(--font-mono);
-  font-size: 12.5px;
-  line-height: 1.85;
+  font-size: 13.5px;
+  line-height: 2;
 }
 .hero-code li {
   display: flex;
@@ -577,7 +633,7 @@ p { margin: 0 0 1em; }
 
 .hero-watch {
   border-left: 1px solid var(--line);
-  padding: 12px 14px;
+  padding: 16px 15px;
   min-width: 0;
 }
 .hero-watch-title {
@@ -590,7 +646,7 @@ p { margin: 0 0 1em; }
 }
 .hero-watch-title:not(:first-child) { margin-top: 14px; }
 
-.hero-vars { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 11.5px; }
+.hero-vars { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
 .hero-vars td { padding: 2px 6px 2px 0; vertical-align: top; }
 .hero-vars td:first-child { color: var(--ink-soft); white-space: nowrap; }
 .hero-vars td:last-child { color: var(--tok-string); word-break: break-word; }
@@ -602,10 +658,13 @@ p { margin: 0 0 1em; }
 .hero-out {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--ink);
   white-space: pre-wrap;
-  min-height: 1.4em;
+  /* Reserved rather than grown into. The program prints once, near the end of
+     the loop, and a pane that appears at that moment shifts everything under
+     it every few seconds. */
+  min-height: 3.4em;
 }
 
 /* The tape: one tick per recorded step, filling as the program advances.
@@ -629,7 +688,13 @@ p { margin: 0 0 1em; }
 
 /* --- Ruled section headings ----------------------------------------------- */
 /* A tick-rule instead of a hairline: the same ruler marking that runs under
-   the hero tape, so sections read as measured intervals.                     */
+   the hero tape, so sections read as measured intervals.
+
+   The scale is a fixed short length rather than flex:1. Run across a full
+   1000px column it stopped reading as a measurement and started reading as
+   noise, or as a rendering fault - and it repeats on every section, so it was
+   the loudest thing on a page where it carries no information. Held to a
+   hand's width it is a mark in the margin again.                             */
 
 .rule {
   font-family: var(--font-display);
@@ -639,7 +704,7 @@ p { margin: 0 0 1em; }
   color: var(--ink-faint);
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 13px;
   margin: 0 0 22px;
 }
 .rule::after {
@@ -647,7 +712,8 @@ p { margin: 0 0 1em; }
      Two layers rather than one, so it reads as a ruler and not as a
      dotted border. */
   content: '';
-  flex: 1;
+  flex: none;
+  width: 104px;
   height: 9px;
   background-image:
     linear-gradient(to right, var(--line-strong) 1px, transparent 1px),
@@ -657,7 +723,42 @@ p { margin: 0 0 1em; }
   background-repeat: repeat-x, repeat-x;
 }
 
-.spec { margin: 66px 0 72px; }
+/* --- The home page grid ----------------------------------------------------
+   A section is a label in a left rail with its content in the column beside
+   it. Before this every section independently fell back to a heading stacked
+   over a paragraph capped at 62ch, so at desktop width roughly half the page
+   sat empty to the right of each block while the ruled heading above it ran
+   the full width. The rail spends that gap on structure instead, and it is
+   the shape the spec list below already had.                                 */
+
+.band {
+  display: grid;
+  grid-template-columns: minmax(0, 190px) minmax(0, 1fr);
+  gap: 0 44px;
+  align-items: start;
+  margin: 0 0 78px;
+}
+
+.band > .rule {
+  grid-column: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  margin: 0;
+}
+/* Shorter in the rail than in the open, so it cannot collide with a label that
+   wraps to two lines, but long enough to still read as a scale. */
+.band > .rule::after { width: 88px; }
+
+.band-body { grid-column: 2; min-width: 0; }
+.band-body > :last-child { margin-bottom: 0; }
+
+/* The page padding below already carries the end of the document. */
+.home > section:last-child, .home > .band:last-child { margin-bottom: 0; }
+
+/* Content that wants the whole measure - the route, which is a grid of cards -
+   keeps its heading above rather than beside. */
+.band-wide { display: block; margin: 0 0 78px; }
 
 .spec-list { margin: 0; display: grid; gap: 0; }
 .spec-list > div {
@@ -672,12 +773,14 @@ p { margin: 0 0 1em; }
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--signal);
+  /* Not --signal. Vermilion means "you" everywhere else on the site, and
+     RUNTIME, NETWORK and LICENCE are facts about the machine, not about the
+     learner. Colouring them was decoration that broke the one rule the
+     palette has. */
+  color: var(--ink-faint);
   padding-top: 3px;
 }
 .spec-list dd { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
-
-.modules { margin-bottom: 72px; }
 
 .module-cards {
   list-style: none;
@@ -724,24 +827,48 @@ p { margin: 0 0 1em; }
 .module-card.is-done a { border-color: color-mix(in srgb, var(--pass) 40%, var(--line)); }
 .module-card .tick { color: var(--pass); }
 
-.scratch { margin-bottom: 72px; }
-.scratch-lead { color: var(--ink-soft); font-size: 14.5px; max-width: 56ch; }
-.scratch-terminal {
+.scratch-lead { color: var(--ink-soft); font-size: 14.5px; max-width: 62ch; }
+/* Two selectors on purpose. The Terminal component adds .terminal to this same
+   element, and .terminal sets height:100% and min-height:0 further down the
+   file at equal specificity, so a plain .scratch-terminal height never applied
+   and the prompt collapsed to about 100px - a REPL with no room to type in.
+   The compound selector outranks it. */
+.scratch-terminal,
+.scratch-terminal.terminal {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   overflow: hidden;
   height: 240px;
+  min-height: 240px;
   background: var(--bg-sunk);
 }
 
-.keeping p { color: var(--ink-soft); max-width: 62ch; font-size: 14.5px; }
+.keeping p { color: var(--ink-soft); max-width: 66ch; font-size: 14.5px; }
 .keeping-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
 
+/* Erasing everything is not a sibling of Export and Certificate, so it does
+   not sit in their row as though it were one more thing to try. */
+.keeping-actions .btn-danger { margin-left: auto; }
+
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; gap: 30px; }
-  .hero-trace-body { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; gap: 30px; align-items: start; }
+  .hero-trace-body { grid-template-columns: 1fr; min-height: 0; }
   .hero-watch { border-left: 0; border-top: 1px solid var(--line); }
   .spec-list > div { grid-template-columns: 1fr; gap: 4px; }
+
+  .band { grid-template-columns: minmax(0, 1fr); gap: 0; margin-bottom: 56px; }
+  .band > .rule {
+    grid-column: 1;
+    flex-direction: row;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 20px;
+  }
+  .band > .rule::after { width: 104px; }
+  .band-body { grid-column: 1; }
+  .band-wide { margin-bottom: 56px; }
+
+  .keeping-actions .btn-danger { margin-left: 0; }
 }
 
 /* --- Lesson layout -------------------------------------------------------- */
@@ -859,14 +986,21 @@ p { margin: 0 0 1em; }
   padding: 0;
   white-space: pre;
 }
+/* Lesson one says "run the example above with the Try it button". It used to
+   be opacity:0 until the block was hovered, which meant the button did not
+   exist at all on a phone, a tablet, or a Chromebook in tablet mode - the
+   prose pointed at a control the student could not find. It is quiet, but it
+   is always there. */
 .code-run {
   position: absolute;
   top: 7px;
   right: 7px;
-  opacity: 0;
-  transition: opacity 0.13s ease;
+  color: var(--ink-faint);
 }
-.prose-code:hover .code-run, .code-run:focus-visible { opacity: 1; }
+.prose-code:hover .code-run { color: var(--ink); border-color: var(--line-strong); }
+
+/* Room for it, so a long first line does not run underneath. */
+.prose-code:has(.code-run) pre { padding-right: 76px; }
 
 /* Hints and solution */
 .hints { margin-top: 34px; }
@@ -960,9 +1094,15 @@ p { margin: 0 0 1em; }
    or the caret drifts away from the glyphs. Change one, change both.        */
 
 .editor {
-  display: flex;
-  /* The keyboard hint wraps onto its own line under the gutter and surface. */
-  flex-wrap: wrap;
+  /* Two rows: the code, then the keyboard hint spanning under it. This was a
+     wrapping flex row, which put the hint on its own line correctly but then
+     let align-content hand the leftover height to that line instead of to the
+     code - so the editor ended at the last typed character and a slab of dead
+     grey filled the rest of the pane. The grid gives the space to the row that
+     wants it. Metrics inside .editor-surface are untouched. */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
   width: 100%;
   min-width: 0;
   background: var(--bg);
@@ -1319,17 +1459,6 @@ p { margin: 0 0 1em; }
 
 .trace-empty { color: var(--ink-faint); font-size: 12px; font-style: italic; margin: 0; }
 
-.tab-new {
-  font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--machine);
-  border: 1px solid color-mix(in srgb, var(--machine) 45%, transparent);
-  border-radius: 999px;
-  padding: 1px 5px;
-}
-
 .check-why {
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius);
@@ -1528,6 +1657,67 @@ p { margin: 0 0 1em; }
 .lesson-report a { color: var(--ink-faint); text-decoration: underline; text-underline-offset: 3px; }
 .lesson-report a:hover { color: var(--signal); }
 
+/* --- Site footer -----------------------------------------------------------
+   The page used to end on a row of buttons. This is on the same rail as every
+   section above it, so it reads as the last band rather than as furniture
+   bolted to the bottom.                                                      */
+
+.sitefoot {
+  border-top: 1px solid var(--line);
+  background: var(--bg-sunk);
+}
+/* A lesson has no bottom: the workbench is sticky and full height. */
+body[data-route='lesson'] .sitefoot { display: none; }
+
+.sitefoot-in {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 34px 26px 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 190px) minmax(0, 1fr);
+  gap: 0 44px;
+  align-items: start;
+}
+
+.sitefoot-mark {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.sitefoot-body { min-width: 0; }
+
+.sitefoot-line {
+  margin: 0 0 16px;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  max-width: 60ch;
+}
+
+.sitefoot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  font-size: 13.5px;
+}
+.sitefoot-links a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+.sitefoot-links a:hover { color: var(--ink); text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .sitefoot-in {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 28px 20px 36px;
+  }
+}
+
 /* Present to a screen reader, absent to everyone else. Not display:none,
    which would take it out of the accessibility tree along with the layout. */
 .visually-hidden {
@@ -1547,7 +1737,7 @@ p { margin: 0 0 1em; }
    the escape hatch has to be visible rather than folklore. */
 
 .editor-keys {
-  flex: 0 0 100%;
+  grid-column: 1 / -1;
   padding: 6px 12px 8px;
   font-size: 11.5px;
   color: var(--ink-faint);
@@ -1676,6 +1866,12 @@ p { margin: 0 0 1em; }
 
 @media (min-width: 901px) {
   .nav-only { display: none; }
+
+  /* Except where the sidebar is a drawer at every width, in which case the
+     button that opens it has to be there too. */
+  body[data-route='home'] .nav-only,
+  body[data-route='teachers'] .nav-only,
+  body[data-route='certificate'] .nav-only { display: inline-flex; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1689,7 +1885,8 @@ p { margin: 0 0 1em; }
 /* --- Print: the certificate is the only thing worth printing -------------- */
 
 @media print {
-  .topbar, .sidebar, .cert-actions, .cert-name-field, .notice, .nav-scrim { display: none !important; }
+  .topbar, .sidebar, .cert-actions, .cert-name-field, .notice, .nav-scrim,
+  .sitefoot { display: none !important; }
   body, .certificate { background: #fff; color: #000; }
   .certificate { border-color: #999; box-shadow: none; }
   .cert-mark { color: #000; }
@@ -1704,7 +1901,20 @@ p { margin: 0 0 1em; }
    here the terms are whole questions a programme director actually asks, so
    they get a wider column and ordinary sentence case. */
 
-.teachers-head { padding: 8px 0 44px; }
+/* The statement on the left, the answer to it on the right. Set as one stacked
+   column it left the whole right half of the page empty above the fold, which
+   is the first thing a head of department sees. */
+.teachers-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 52px;
+  align-items: start;
+  padding: 8px 0 48px;
+}
+.teachers-eyebrow { grid-column: 1 / -1; }
+.teachers-head h1 { grid-column: 1; grid-row: 2 / span 2; }
+.teachers-head .hero-sub { grid-column: 2; grid-row: 2; }
+.teachers-head .hero-actions { grid-column: 2; grid-row: 3; }
 
 .teachers-eyebrow {
   font-family: var(--font-mono);
@@ -1819,6 +2029,13 @@ p { margin: 0 0 1em; }
 }
 
 .teachers-card p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.55; }
+
+@media (max-width: 900px) {
+  .teachers-head { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .teachers-head h1,
+  .teachers-head .hero-sub,
+  .teachers-head .hero-actions { grid-column: 1; grid-row: auto; }
+}
 
 @media (max-width: 640px) {
   .teachers .spec-list > div { grid-template-columns: minmax(0, 1fr); gap: 6px; }

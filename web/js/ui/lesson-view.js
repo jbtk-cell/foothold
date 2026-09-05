@@ -109,9 +109,7 @@ export class LessonView {
               <button class="pane-tab" role="tab" data-pane="tests">
                 Checks <span class="tab-badge js-tests-badge"></span>
               </button>
-              <button class="pane-tab" role="tab" data-pane="trace">
-                Trace <span class="tab-new">new</span>
-              </button>
+              <button class="pane-tab" role="tab" data-pane="trace">Trace</button>
               <button class="pane-tab" role="tab" data-pane="terminal">Terminal</button>
             </div>
             <div class="pane is-active" data-pane="output">
