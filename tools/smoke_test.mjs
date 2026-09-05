@@ -121,6 +121,14 @@ async function main() {
 
   // --- A lesson, start to finish -------------------------------------------
   console.log('\nfirst lesson');
+
+  // The course list is a drawer on the front page, so it has to be opened
+  // before a lesson can be picked from it. Going in this way rather than
+  // through the hero button is deliberate: it covers the drawer, and a closed
+  // drawer that is merely slid off the edge would still be clickable here,
+  // which is the bug this sequence would catch.
+  await page.click('#nav-toggle');
+  await page.waitForSelector('.nav-lesson', { state: 'visible' });
   await page.click('.nav-lesson');
   await page.waitForSelector('.editor-input');
 

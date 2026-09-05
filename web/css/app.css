@@ -331,13 +331,21 @@ body[data-route='certificate'] .sidebar {
   width: var(--sidebar-w);
   z-index: 50;
   transform: translateX(-100%);
-  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* visibility as well as the transform. Slid off the edge, a drawer is still
+     in the tab order and still hit-testable, so someone tabbing through the
+     front page walks into sixty lesson links they cannot see, and a click
+     lands on a target nobody can point at. visibility:hidden takes it out of
+     both. The delay lets the slide finish before it disappears. */
+  visibility: hidden;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.22s;
 }
 
 body[data-route='home'].nav-open .sidebar,
 body[data-route='teachers'].nav-open .sidebar,
 body[data-route='certificate'].nav-open .sidebar {
   transform: none;
+  visibility: visible;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
 }
 
 body[data-route='home'].nav-open .nav-scrim,
@@ -1848,9 +1856,16 @@ body[data-route='lesson'] .sitefoot { display: none; }
     width: var(--sidebar-w);
     z-index: 50;
     transform: translateX(-100%);
-    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* See the note on the route-scoped drawer above: off the edge is not the
+       same as gone, and a closed drawer must not be reachable by Tab. */
+    visibility: hidden;
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.22s;
   }
-  body.nav-open .sidebar { transform: none; }
+  body.nav-open .sidebar {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+  }
 
   body.nav-open .nav-scrim {
     display: block;
