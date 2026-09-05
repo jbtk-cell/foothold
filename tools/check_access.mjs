@@ -332,6 +332,34 @@ section('finishing a lesson without a mouse');
   await context.close();
 }
 
+// --- The drawer holding the course list --------------------------------------
+// Off the edge is not the same as gone. A drawer closed with a transform alone
+// stays in the tab order and stays clickable, so the front page would quietly
+// hand a keyboard user sixty lesson links they cannot see.
+
+section('the course list drawer');
+
+{
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(HOME, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('.nav-lesson', { state: 'attached' });
+
+  const firstLesson = page.locator('.nav-lesson').first();
+
+  check('a closed drawer is out of reach on the front page', !(await firstLesson.isVisible()));
+
+  await page.click('#nav-toggle');
+  await page.waitForSelector('.nav-lesson', { state: 'visible', timeout: 5000 }).catch(() => {});
+  check('the header button opens it', await firstLesson.isVisible());
+
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('.nav-lesson', { state: 'hidden', timeout: 5000 }).catch(() => {});
+  check('Escape closes it again', !(await firstLesson.isVisible()));
+
+  await context.close();
+}
+
 // --- What a screen reader is told -------------------------------------------
 
 section('what gets said out loud');
