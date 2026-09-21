@@ -3,7 +3,7 @@
 Print this, or forward it. It assumes you have never written Python and do not
 intend to start today.
 
-**The site:** https://jbtk-cell.github.io/foothold/
+**The site:** https://foothold.school/
 
 Nothing to install, no logins, no accounts. Open it and go. If the room's
 internet is unreliable, open the site on each machine once beforehand, because

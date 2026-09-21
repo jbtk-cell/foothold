@@ -7,7 +7,7 @@ authors:
 version: 1.0.0
 date-released: "2026-08-19"
 repository-code: "https://github.com/jbtk-cell/foothold"
-url: "https://jbtk-cell.github.io/foothold/"
+url: "https://foothold.school/"
 abstract: >-
   A free, open source introductory Python course that runs entirely in the
   browser. It grades every exercise by executing it against real tests in
